@@ -5,6 +5,7 @@
     }
 
 
+
     Game.prototype.initialize = function() {
 
         this.stage = new Stage('stage');
