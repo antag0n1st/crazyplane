@@ -29,6 +29,12 @@
         ContentManager.add_image('sonic_plane', 'assets/images/sonic_plane.png');
         ContentManager.add_image('smoke', 'assets/images/smoke.png');
         ContentManager.add_image('hero', 'assets/images/hero.png');
+        ContentManager.add_image('bm1', 'assets/images/mountin_1.png');
+        ContentManager.add_image('bm2', 'assets/images/mountin_2.png');
+        ContentManager.add_image('fm1', 'assets/images/front_mountin_1.png');
+        ContentManager.add_image('fm2', 'assets/images/front_mountin_2.png');
+        ContentManager.add_image('fm3', 'assets/images/front_mountin_3.png');
+        ContentManager.add_image('bg', 'assets/images/background.jpg');
 
         ContentManager.download_images(this.stage, function() {            
             window.game.start();
