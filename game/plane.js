@@ -21,7 +21,6 @@
         
         this.emiter_point = new Vector(-40,10);
         this.velocity = new Vector(0, 0);
-       // this.velocity.setLength(150/1000);
         
         this.rotation = 50/1000;
         
@@ -53,7 +52,7 @@
                 var r1 = Math.random_int(0,6);
                 var r2 = Math.random_int(0,6);
 
-                 var pos = this.bounds.pos;
+                 var pos = this.get_position();
                  var anchor = Vector.addition(pos,this.emiter_point);
 
                 anchor.x += r1 - 3;
@@ -63,6 +62,7 @@
 
                 smoke.set_position(anchor.x,anchor.y);
                 this.get_parent().add_child(smoke); // the smoke will be a sibling
+                
         }
         
         
