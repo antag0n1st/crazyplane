@@ -36,6 +36,8 @@
         ContentManager.add_image('fm3', 'assets/images/front_mountin_3.png');
         ContentManager.add_image('bg', 'assets/images/background.jpg');
         ContentManager.add_image('ground', 'assets/images/ground.png');
+        ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
+        
 
         ContentManager.download_images(this.stage, function() {            
             window.game.start();

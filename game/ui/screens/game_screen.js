@@ -76,11 +76,9 @@
     GameScreen.prototype.update = function() { 
 
         if(this.up_key){
-            this.plane.steer_up();
-        }
-        
-        if(this.down_key){
-            this.plane.steer_down();
+            this.plane.steer_up();            
+        }else if(this.down_key){
+            this.plane.steer_down();            
         }
         
         this.plane.velocity.setAngle(Math.degrees_to_radians(this.plane.angle));

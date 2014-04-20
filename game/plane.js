@@ -9,10 +9,12 @@
     Plane.prototype.initialize = function(){        
         
         var sprite_sheet = new SpriteSheet([{
-                image: ContentManager.images.sonic_plane,
+                image: ContentManager.images.paperplane,
                 frames: {x: 4, y: 2},
                 animations: {
-                    fly: {start: 0, end: 3, loop: true, duration: 300}
+                    fly: {start: 0, end: 7, loop: true, duration: 800},
+                    fly_down: {start: 0, end: 3, loop: false, duration: 400},
+                    fly_up: {start: 4, end: 7, loop: false, duration: 400}
                 }
                 , reg: {x: 0.6, y: 0.5, width: 0.8, height: 0.5}
             }]);
@@ -36,6 +38,8 @@
     };
     
     Plane.prototype.smoke = function(){
+        
+        return;
         
         this.smoke_time += Ticker.step;
         
