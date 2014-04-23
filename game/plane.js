@@ -21,10 +21,10 @@
 
         this.animation_initialize(sprite_sheet);
         
-        this.emiter_point = new Vector(-40,10);
+        this.emiter_point = new Vector(0,0);
         this.velocity = new Vector(0, 0);
         
-        this.rotation = 50/1000;
+        this.rotation = 1/1000;
         
         
         this.smoke_frequency = 20/1000; // per second
@@ -76,15 +76,11 @@
     };
     
     Plane.prototype.steer_up = function(){
-        var angle = this.angle;
-        angle -= Ticker.step*this.rotation;
-        this.rotate_to(angle);
+        this.velocity.rotate(-Ticker.step*this.rotation);
     };
     
     Plane.prototype.steer_down = function(){
-        var angle = this.angle;
-        angle += Ticker.step*this.rotation;
-        this.rotate_to(angle);
+        this.velocity.rotate(Ticker.step*this.rotation);
     };
     
     Plane.prototype.on_added_to_parent = function(parent){
