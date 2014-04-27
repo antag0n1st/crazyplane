@@ -42,3 +42,32 @@ Leveling:
  
 
 
+
+Power Ups:
+=========
+
+	All power ups , will be displayed as progress bars.
+
+	- Level up 
+			- Collect resource 1 to power up , you need more of this resource to fill the progress bar.
+			Once the progress bar is full , it will reset , and it will enter next level. 
+			(Next level will need more resources)
+			- It will increase the base speed of the plane on every level.
+			
+	- Energy Up
+			- Collect resource 2 , if the progress bar is full no energy will be added.
+			- It will increase the Energy bar , needed to navigate the plane.	
+	
+	- Magnet
+			- Collect resource 3 to fill the progress bar for this power up , the power up will
+			automatically take place and the progress bar will reset. The amount of resources 
+			needed to fill this progress bar 
+			will be the same in every level, the price will not increase.
+			- It will automatically collect near by resources
+			
+	- Rocket
+			- Collect resource 4 , otherwise it will behave just like the Magnet Power up.
+			- It will be easy to navigate , and it will not consume the energy. The frequency of some 
+			resources might increase.
+			
+	
