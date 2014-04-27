@@ -30,13 +30,10 @@
         this.front_layer.add_child(this.ground);
 
         this.plane = new Plane();
-        this.plane.bounds = new SAT.Polygon(new SAT.Vector(), [
-            new SAT.Vector(-54, 14),
-            new SAT.Vector(54, -6),
-            new SAT.Vector(-54, -8)
-//new SAT.Vector(-14, 14),
-//            new SAT.Vector(94, -6),
-//            new SAT.Vector(-14, -8)
+        this.plane.bounds = new Polygon(new Vector(), [
+            new Vector(-54, 14),
+            new Vector(54, -6),
+            new Vector(-54, -8)
         ]);
 
         this.plane.set_position(300, 240);
@@ -54,7 +51,21 @@
         this.front_layer.add_child(fan);
         this.fans.push(fan);
 
+        this.bonuses = [];
+        this.max_bonuses_length = 10;
+        for (i = 0; i < this.max_bonuses_length; i++)
+        {
+            var b = new Bonus();
+            b.set_position(this.plane.position.x + Math.random_int(600, 2800), Math.random_int(0, 690));
+            this.front_layer.add_child(b);
+            this.bonuses.push(b);
+        }
+
         this.gravity = new Vector(0, 0.000015);
+        this.add_vector = new Vector();
+        this.remove_vector = new Vector();
+
+        this.coins = 0;
 
         this.fall_down = false;
 
@@ -79,7 +90,7 @@
         });
         tween.run();
         this.hud.level = 1000;
-        this.hud.level_points = this.plane.velocity.x+" "+this.plane.velocity.y;
+        this.hud.level_points = this.plane.velocity.x + " " + this.plane.velocity.y + "coins: " + this.coins+" angle:"+this.plane.angle;
 
         this.add_child(this.hud);
 
@@ -104,9 +115,6 @@
         }).down('space', function() {
             that.space_key = false;
         });
-
-
-
     };
 
     GameScreen.prototype.game_over = function() {
@@ -114,7 +122,27 @@
     };
 
     GameScreen.prototype.update = function() {
-        this.hud.level_points = Math.round_decimal(this.plane.velocity.x, 2)+" "+Math.round_decimal(this.plane.velocity.y, 2) +" "+ Math.round_decimal(this.plane.velocity.len(),2);
+        this.hud.level_points = Math.round_decimal(this.plane.velocity.x, 2) + " " + Math.round_decimal(this.plane.velocity.y, 2) + " " + Math.round_decimal(this.plane.velocity.len(), 2) + " coins: " + this.coins+" angle:"+Math.round_decimal(this.plane.velocity.y, 2) + " " + Math.round_decimal(this.plane.angle,1);
+
+
+
+
+        if (this.add_vector.len() > 0)
+        {
+//            var v = new Vector(0.01, -0.01);
+//            this.add_vector.add(-v);
+//            this.remove_vector.add(v);
+
+            //this.plane.velocity.add(v.clone().scale(Ticker.step));
+        }
+
+        if (this.remove_vector.len() > 0)
+        {
+//            var v = new Vector(0.005, 0.005);
+//            this.remove_vector.add(-v);
+
+            //this.plane.velocity.add(-v.clone().scale(Ticker.step));
+        }
 
         if (this.up_key && this.hud.level > 0) {
             this.plane.steer_up();
@@ -123,18 +151,12 @@
             this.plane.steer_down();
         }
 
-        //this.plane.velocity.setAngle(Math.degrees_to_radians(this.plane.angle));
-
-
         var v = this.gravity.clone().scale(Ticker.step);
         this.plane.velocity.add(v);
-
-//if(!this.fall_down)
-        this.plane.rotate_to(Math.radians_to_degrees(this.plane.velocity.getAngle()));
-//    else
-//        if(this.plane.angle!=0)
-//            this.plane.rotate_to(10);
-
+        if (this.plane.velocity.len() > 0.05)
+        {
+            this.plane.rotate_to(Math.radians_to_degrees(this.plane.velocity.getAngle()));
+        }
 
         //fly
         var p = this.plane.get_position();
@@ -153,55 +175,83 @@
         if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground1.bounds, response)
                 || SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground2.bounds, response))
         {
-//            this.gravity = new Vector(0, 0);
-//            this.plane.velocity = new Vector(0, 0);
+            this.plane.velocity.scale(0.98);
+            
+            if(this.plane.velocity.len()<0.05)
+                this.plane.velocity.setLength(0);
+            
+            
+            if(this.plane.angle >= 10 && this.plane.angle<90)
+            {
+                var a=0;
+                if(this.plane.angle>=11)
+                    a=this.plane.angle-1;
+                else
+                    a=10;
+                
+                this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+            }
+            
+            if(this.plane.angle <10 && this.plane.angle>=0)
+                this.plane.velocity.setAngle(Math.degrees_to_radians(10));
 
-//this.fall_down=true;
 
-//this.gravity = new Vector(0,0);
-
-
-            var v = (new Vector(0, -0.001)).scale(Ticker.step);
-            this.plane.velocity.add(v);
-
-
-            var bounce = response.overlapN;
-
-//            log(response.a.pos);
-//            log(response.b.pos);
-//            log(plane.position);
-//            log(plane.bounds.pos); 
+            if(this.plane.angle > 90 && this.plane.angle<179)
+            {
+                var a=0;
+                if(this.plane.angle<=178)
+                    a=this.plane.angle+1;
+                else
+                    a=179;
+                
+                this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+            }
+            
+            if(this.plane.angle <180 && this.plane.angle>=170)
+                this.plane.velocity.setAngle(179);
 
             response.a.pos.sub(response.overlapV);
 
-            // log(response.overlapV);
-
-
             this.plane.set_position(this.plane.position.x - response.overlapV.x, this.plane.position.y - response.overlapV.y);
-            //  log(response);
-            //this.plane.velocity.setLength(10 / 1000);
-
-
-            //this.plane.velocity.setLength(0);
-            //this.plane.rotate_to(10);
         }
         response.clear();
 
         //plane fans collision
         if (SAT.testPolygonPolygon(this.plane.bounds, this.fans[0].bounds, response))
         {
-            this.plane.velocity.add(new Vector(0, -0.2));
+            this.plane.velocity.add(new Vector(0.009, -0.009));
+            this.add_vector.add(new Vector(0.009, -0.009));
+            log(this.add_vector);
 
             //move fan
             this.fans[1].set_position(this.fans[1].position.x + Math.random_int(1500, 3000), this.fans[1].position.y);
         }
-        
+
         if (SAT.testPolygonPolygon(this.plane.bounds, this.fans[1].bounds, response))
         {
-            this.plane.velocity.add(new Vector(0, -0.2));
+            this.plane.velocity.add(new Vector(0.009, -0.009));
 
             //move fan
             this.fans[0].set_position(this.fans[0].position.x + Math.random_int(1500, 3000), this.fans[0].position.y);
+        }
+
+        //plane bonuses collision
+        for (var i in this.bonuses)
+        {
+            var bonus = this.bonuses[i];
+            if (SAT.testPolygonPolygon(this.plane.bounds, bonus.bounds, response))
+            {
+                log("in");
+                bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
+                this.coins++;
+
+                if (this.coins >= 5)
+                {
+                    var pow = new PowerUp();
+                    pow.set_position(this.plane.position.x + 200, this.plane.position.y);
+                    this.front_layer.add_child(pow);
+                }
+            }
         }
 
         this.hud.update();
@@ -240,6 +290,15 @@
         this.front_mountin.set_position(pos.x * near_k, pos.y * near_k);
 
 
+        //bonuses disapers when are far away from plane
+        for (var i in this.bonuses)
+        {
+            var b = this.bonuses[i];
+            if (b.position.x + 1000 < this.plane.position.x)
+            {
+                b.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
+            }
+        }
     };
 
     GameScreen.prototype.show = function() {

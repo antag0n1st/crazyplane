@@ -37,6 +37,8 @@
         ContentManager.add_image('bg', 'assets/images/background.jpg');
         ContentManager.add_image('ground', 'assets/images/ground.png');
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
+        ContentManager.add_image('apple', 'assets/images/apple.png');
+        ContentManager.add_image('lemon', 'assets/images/lemon.png');
         
 
         ContentManager.download_images(this.stage, function() {            
