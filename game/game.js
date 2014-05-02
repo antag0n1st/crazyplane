@@ -39,6 +39,8 @@
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
         ContentManager.add_image('apple', 'assets/images/apple.png');
         ContentManager.add_image('lemon', 'assets/images/lemon.png');
+        ContentManager.add_image('banana', 'assets/images/banana.png');
+        ContentManager.add_image('cherry', 'assets/images/cherry.png');
         
 
         ContentManager.download_images(this.stage, function() {            
