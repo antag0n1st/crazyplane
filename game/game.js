@@ -42,6 +42,12 @@
         ContentManager.add_image('banana', 'assets/images/banana.png');
         ContentManager.add_image('cherry', 'assets/images/cherry.png');
         
+        ContentManager.add_image('bg1', 'assets/images/bg1.png');
+        ContentManager.add_image('bg2', 'assets/images/bg2.png');
+        ContentManager.add_image('fg1', 'assets/images/fg1.png');
+        ContentManager.add_image('fg2', 'assets/images/fg2.png');
+        ContentManager.add_image('orb', 'assets/images/orb.png');
+        
 
         ContentManager.download_images(this.stage, function() {            
             window.game.start();

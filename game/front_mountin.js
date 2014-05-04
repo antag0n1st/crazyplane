@@ -13,20 +13,16 @@
         
         this.sprites = [];
         
-        var fm1 = new Fm1();
+        var fm1 = new Sprite('bg1');
         fm1.set_position(0,120);
-        var fm2 = new Fm2();
+        var fm2 = new Sprite('bg2');
         fm2.set_position(800,120);
-        var fm3 = new Fm3();
-        fm3.set_position(1600,120);
         
         this.add_child(fm1);
         this.add_child(fm2);
-        this.add_child(fm3);
         
         this.sprites.push(fm1);
         this.sprites.push(fm2);
-        this.sprites.push(fm3);
         
     };
     
@@ -46,10 +42,10 @@
                 
                 var sprite = this.sprites[i];
                 
-                if(sprite.bounds.pos.x < -1600){
+                if(sprite.bounds.pos.x < -800){
                     
                   var p =  sprite.get_position();
-                  p.add(new Vector(2400,0));
+                  p.add(new Vector(1600,0));
                   sprite.set_position(p.x,p.y);
                     
                 }

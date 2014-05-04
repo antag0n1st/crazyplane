@@ -16,6 +16,7 @@
         this.min_scale = 0.9;
         this.max_scale = 1;
 
+        this.pulsate();
 
     };
 

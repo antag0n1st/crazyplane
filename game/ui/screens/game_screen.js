@@ -48,9 +48,9 @@
 
         this.bonuses = [];
         this.max_bonuses_length = 10;
-        for (i = 0; i < this.max_bonuses_length; i++)
+        for (var i = 0; i < this.max_bonuses_length; i++)
         {
-            var b = new Bonus();
+            var b = new Orb();
             b.set_position(this.plane.position.x + Math.random_int(600, 2800), Math.random_int(0, 690));
             this.front_layer.add_child(b);
             this.bonuses.push(b);
@@ -189,49 +189,24 @@
         var response = new SAT.Response();
 
         //plane - floor
-        if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground1.bounds, response)
-                || SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground2.bounds, response))
-        {
-            this.plane.velocity.scale(0.98);
 
-            if (this.plane.velocity.len() < 0.05)
-                this.plane.velocity.setLength(0);
-
-
-            if (this.plane.angle >= 10 && this.plane.angle < 90)
+   
+            if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground1.bounds, response))
             {
-                var a = 0;
-                if (this.plane.angle >= 11)
-                    a = this.plane.angle - 1;
-                else
-                    a = 10;
-
-                this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+                this.handle_plane_to_ground_collision(response);
             }
-
-            if (this.plane.angle < 10 && this.plane.angle >= 0)
-                this.plane.velocity.setAngle(Math.degrees_to_radians(10));
-
-
-            if (this.plane.angle > 90 && this.plane.angle < 179)
+            response.clear();
+            
+            if ( SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground2.bounds, response))
             {
-                var a = 0;
-                if (this.plane.angle <= 178)
-                    a = this.plane.angle + 1;
-                else
-                    a = 179;
-
-                this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+                this.handle_plane_to_ground_collision(response);
             }
+            response.clear();
+     
+        
+        
 
-            if (this.plane.angle < 180 && this.plane.angle >= 170)
-                this.plane.velocity.setAngle(179);
 
-            response.a.pos.sub(response.overlapV);
-
-            this.plane.set_position(this.plane.position.x - response.overlapV.x, this.plane.position.y - response.overlapV.y);
-        }
-        response.clear();
 
         //plane fan collision
         if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, response))
@@ -245,7 +220,7 @@
         response.clear();
 
         //plane bonuses collision
-        for (var i in this.bonuses)
+        for (var i = 0; i < this.bonuses.length;i++)
         {
             var bonus = this.bonuses[i];
             if (SAT.testPolygonPolygon(this.plane.bounds, bonus.bounds, response))
@@ -314,14 +289,14 @@
         //magnet plane mode
         if (this.magnet_start > 0)
         {
-            for (var i in this.bonuses)
+            for (var i = 0; i< this.bonuses.length; i++)
             {
                 var bonus = this.bonuses[i];
                 var v = new V(bonus.bounds.pos.x, bonus.bounds.pos.y);
-                response.clear();
+               
                 if (SAT.pointInCircle(v, this.magnet_plane))
                 {
-                    log(this.coins+1+" "+bonus.position.x);
+                    log(this.coins + 1 + " " + bonus.position.x);
                     bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
                     this.coins++;
 
@@ -333,11 +308,11 @@
 
                         this.coins = 0;
                     }
-                } 
+                }
                 response.clear();
             }
         }
-        
+
 
         this.hud.update();
     };
@@ -413,6 +388,51 @@
             var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
             this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
         }
+    };
+
+    GameScreen.prototype.handle_plane_to_ground_collision = function(response){
+        
+        
+                this.plane.velocity.scale(0.98);
+
+                if (this.plane.velocity.len() < 0.05)
+                    this.plane.velocity.setLength(0);
+
+
+                if (this.plane.angle >= 10 && this.plane.angle < 90)
+                {
+                    var a = 0;
+                    if (this.plane.angle >= 11)
+                        a = this.plane.angle - 1;
+                    else
+                        a = 10;
+
+                    this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+                }
+
+                if (this.plane.angle < 10 && this.plane.angle >= 0)
+                    this.plane.velocity.setAngle(Math.degrees_to_radians(10));
+
+
+                if (this.plane.angle > 90 && this.plane.angle < 179)
+                {
+                    var a = 0;
+                    if (this.plane.angle <= 178)
+                        a = this.plane.angle + 1;
+                    else
+                        a = 179;
+
+                    this.plane.velocity.setAngle(Math.degrees_to_radians(a));
+                }
+
+                if (this.plane.angle < 180 && this.plane.angle >= 170)
+                    this.plane.velocity.setAngle(179);
+
+                response.a.pos.sub(response.overlapV);
+
+                this.plane.set_position(this.plane.position.x - response.overlapV.x, this.plane.position.y - response.overlapV.y);
+            
+        
     };
 
     GameScreen.prototype.show = function() {

@@ -5,6 +5,13 @@
         
         this.sprites = [];
         
+        var fg1 = new Sprite('fg1');
+        fg1.set_position(0,320);
+        fg1.z_index = -10;
+        var fg2 = new Sprite('fg2');
+        fg2.set_position(800,320);
+        fg2.z_index = -10;
+        
         this.ground1 = new Sprite("ground");
         this.ground1.set_position(0,750);
         
@@ -13,9 +20,13 @@
         
         this.add_child(this.ground1);
         this.add_child(this.ground2);
+        this.add_child(fg1);
+        this.add_child(fg2);
         
         this.sprites.push(this.ground1);
         this.sprites.push(this.ground2);
+        this.sprites.push(fg1);
+        this.sprites.push(fg2);
     }    
     
     FrontLayer.prototype = new Drawable();
