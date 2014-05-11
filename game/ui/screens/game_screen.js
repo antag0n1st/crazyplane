@@ -48,7 +48,16 @@ GameScreen.prototype.initialize = function() {
     this.plane.play('fly');
     this.front_layer.add_child(this.plane);
 
-    this.fan = new Fan();
+    this.fan = new FanAnimated();
+    this.fan.play("blow");
+    this.fan.bounds = new Polygon(new Vector(), [
+        new Vector(-15, -44),
+        //new Vector(-20, -80),
+        new Vector(10, -200),
+        new Vector(180, -120),
+        new Vector(50, 40)
+    ]);
+    
     this.fan.set_position(1400, 690);
     this.front_layer.add_child(this.fan);
 

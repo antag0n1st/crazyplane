@@ -7,9 +7,9 @@
     Fan.prototype = new Sprite();
     Fan.prototype.sprite_initialize = Fan.prototype.initialize;
     Fan.prototype.initialize = function() {
-        this.sprite_initialize('hero'); // your image name
+        this.sprite_initialize('fan'); // your image name
 
-        this.images = ['hero'];
+        this.images = ['fan'];
         this.z_index = -1;
         this.set_anchor(0.5, 0.5);
 
