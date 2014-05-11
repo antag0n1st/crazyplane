@@ -256,11 +256,11 @@ GameScreen.prototype.update = function() {
     //plane fan collision
     if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, response))
     {
-        var new_angle = this.plane.angle - 1;
+        var new_angle = this.plane.angle - 0.6;
         this.plane.velocity.setAngle(Math.degrees_to_radians(new_angle));
-        this.plane.velocity.scale(1.02);
+        this.plane.velocity.scale(1.015);
 
-        this.add_acc += 1.02;
+        this.add_acc += 1.015;
     }
     response.clear();
 
