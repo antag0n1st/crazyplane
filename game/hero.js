@@ -1,4 +1,4 @@
-(function(window,undefined){
+//(function(window,undefined){
     
     function Hero(){
         this.initialize();
@@ -26,6 +26,6 @@
     };
     
     
-    window.Hero = Hero;
-    
-}(window));
+//    window.Hero = Hero;
+//    
+//}(window));

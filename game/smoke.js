@@ -1,4 +1,4 @@
-(function(window,undefined){
+//(function(window,undefined){
     
     function Smoke(){
         this.initialize();
@@ -85,6 +85,6 @@
         
     };
     
-    window.Smoke = Smoke;
-    
-}(window));
+//    window.Smoke = Smoke;
+//    
+//}(window));

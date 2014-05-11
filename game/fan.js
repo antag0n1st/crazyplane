@@ -1,4 +1,4 @@
-(function(window, undefined) {
+//(function(window, undefined) {
 
     function Fan() {
         this.initialize();
@@ -59,6 +59,6 @@
     };
 
 
-    window.Fan = Fan;
-
-}(window));
+//    window.Fan = Fan;
+//
+//}(window));

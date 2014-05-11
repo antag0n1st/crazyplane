@@ -1,4 +1,4 @@
-(function(window, undefined) {
+//(function(window, undefined) {
 
     function Bonus() {
         this.initialize();
@@ -60,6 +60,6 @@
     };
 
 
-    window.Bonus = Bonus;
-
-}(window));
+//    window.Bonus = Bonus;
+//
+//}(window));

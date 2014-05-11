@@ -1,4 +1,4 @@
-(function(window, undefined) {
+//(function(window, undefined) {
 
     function Magnet() {
         this.initialize();
@@ -59,6 +59,6 @@
     };
 
 
-    window.Magnet = Magnet;
-
-}(window));
+//    window.Magnet = Magnet;
+//
+//}(window));

@@ -1,4 +1,4 @@
-(function(window, undefined) {
+//(function(window, undefined) {
 
     function Rocket() {
         this.initialize();
@@ -59,6 +59,6 @@
     };
 
 
-    window.Rocket = Rocket;
-
-}(window));
+//    window.Rocket = Rocket;
+//
+//}(window));

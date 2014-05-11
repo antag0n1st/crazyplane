@@ -1,4 +1,4 @@
-(function(window,undefined){
+//(function(window,undefined){
     
     function Plane(){
         this.initialize();
@@ -31,10 +31,12 @@
         this.smoke_count = 0;
         this.smoke_time = 0;
         
+        
+        
     };
     
     Plane.prototype.on_mouse_up = function(event){
-        log("plane");
+       // log("plane");
     };
     
     Plane.prototype.smoke = function(){
@@ -96,18 +98,20 @@
     Plane.prototype.draw = function(context){
         Animation.prototype.draw.call(this,context);
         
-        if(Config.debug){
-            var pos = this.bounds.pos;
-            var anchor = Vector.addition(pos,this.emiter_point);
-            context.fillStyle="yellow";
-            context.beginPath();
-            context.arc(anchor.x,anchor.y,2,0,2*Math.PI);
-            context.fill();
-            context.closePath();
-            context.fillStyle="black";
-
-            this.debug_bounds(context);
-        }
+        
+        
+//        if(Config.debug){
+//            var pos = this.bounds.pos;
+//            var anchor = Vector.addition(pos,this.emiter_point);
+//            context.fillStyle="yellow";
+//            context.beginPath();
+//            context.arc(anchor.x,anchor.y,2,0,2*Math.PI);
+//            context.fill();
+//            context.closePath();
+//            context.fillStyle="black";
+//
+//            this.debug_bounds(context);
+//        }
         
         
     };
@@ -123,6 +127,6 @@
         
     };
     
-    window.Plane = Plane;
-    
-}(window));
+//    window.Plane = Plane;
+//    
+//}(window));

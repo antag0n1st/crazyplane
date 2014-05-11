@@ -1,4 +1,4 @@
-(function(window, undefined) {
+//(function(window, undefined) {
 
     function Energy() {
         this.initialize();
@@ -59,6 +59,6 @@
     };
 
 
-    window.Energy = Energy;
-
-}(window));
+//    window.Energy = Energy;
+//
+//}(window));
