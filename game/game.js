@@ -8,20 +8,12 @@
 
     Game.prototype.initialize = function() {
         
-        console.log("THE GAME HAS START 3");
-
         this.stage = new Stage();
         
         this.input = new Input();
         
         this.input.add_listener('stage');
         
-//        if(!Config.is_mobile){            
-//            this.input.add_listener('stage');
-//        }
-        
-        
-
         this.paused = false;
         this.pause_callback = function() {
         };
@@ -59,8 +51,7 @@
         
         
 
-        ContentManager.download_images(this.stage, function() {   
-            console.log("THE GAME HAS START 6");
+        ContentManager.download_images(this.stage, function() {  
             window.game.start();
         });
 
@@ -71,7 +62,6 @@
 
 
     Game.prototype.start = function() {
-        console.log("THE GAME HAS START 7");
         this.navigator.add(new GameScreen());
         
         // we want to do some work before we update the canvas,
@@ -100,8 +90,9 @@
     Game.prototype.tick = function() {
 
         this.stage.clear_canvas();
-
+        
         this.navigator.update();
+                
         Actions.run();
 
         // check if the game is paused

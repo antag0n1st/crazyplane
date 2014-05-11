@@ -127,6 +127,11 @@
         
     };
     
+    Plane.prototype.update = function(dt){
+        Animation.prototype.update.call(this,dt);
+        
+    };
+    
 //    window.Plane = Plane;
 //    
 //}(window));

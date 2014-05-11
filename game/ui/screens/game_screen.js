@@ -1,7 +1,6 @@
 //(function(window, undefined) {
 
 function GameScreen() {
-    console.log("THE GAME HAS START 8");
     this.initialize();
 }
 
@@ -11,8 +10,6 @@ GameScreen.prototype.screen_initialize = GameScreen.prototype.initialize;
 GameScreen.prototype.initialize = function() {
     this.screen_initialize();
 
-
-    console.log("THE GAME HAS START fff");
     this.front_layer = new FrontLayer();
 
     this.back_mountin = new BackMountin();
@@ -120,8 +117,6 @@ GameScreen.prototype.initialize = function() {
 
     var that = this;
 
-    console.log("THE GAME HAS START 9");
-
     this.kibo = new Kibo();
 
     this.kibo.down('left', function() {
@@ -141,7 +136,6 @@ GameScreen.prototype.initialize = function() {
         that.space_key = false;
     });
 
-    console.log("THE GAME HAS START 10");
 };
 
 GameScreen.prototype.game_over = function() {
