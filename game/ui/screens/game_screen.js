@@ -43,7 +43,7 @@ GameScreen.prototype.initialize = function() {
 
 
     this.plane.set_position(390, 550);
-    this.plane.velocity.setLength(0.4);
+    this.plane.velocity.setLength(0.4);//(0.4);
     this.plane.velocity.rotate(Math.degrees_to_radians(-20));
     this.plane.play('fly');
     this.front_layer.add_child(this.plane);
@@ -68,7 +68,7 @@ GameScreen.prototype.initialize = function() {
 
     this.magnet_count = 0;
     this.magnet_point = new Magnet();
-    this.magnet_point.set_position(2000, Math.random_int(50, 700));
+    this.magnet_point.set_position(2000, 300);// Math.random_int(50, 700));
     this.front_layer.add_child(this.magnet_point);
     this.magnet_start = -1;
     this.magnet_plane = new Circle(new Vector(), 300);
@@ -77,9 +77,12 @@ GameScreen.prototype.initialize = function() {
     this.rocket_point = new Rocket();
     this.rocket_point.set_position(2000, Math.random_int(50, 700));
     this.front_layer.add_child(this.rocket_point);
+    this.rocket_start = -1;
+    this.old_velocity = this.plane.velocity.len();
+    this.velocity_updated = false;
 
     this.gravity = new Vector(0, 0.000015);
-    this.min_velocity = 0.2;
+    this.min_velocity = 0.2;//current min velocity of plane
 
     this.coins = 0;
     this.next_pow_coins = 5;
@@ -160,14 +163,41 @@ GameScreen.prototype.update = function() {
     if (this.magnet_start > 0)
     {
         //magnet mode ends
-        if (this.magnet_start + 1000 <= this.plane.position.x)
+        if (this.magnet_start + 10000 <= this.plane.position.x)
         {
             this.magnet_start = -1;
         }
         else
         {
-            this.magnet_plane.pos = new Vector(this.plane.position.x, this.plane.position.y);
-            //this.plane.bounds = this.magnet_plane;
+            this.magnet_plane.pos = this.plane.bounds.pos;
+        }
+    }
+
+    //rocket mode
+    //in rocket mode?
+    if (this.rocket_start > 0)
+    {
+        var velocoty_updated;
+        //rocket mode ends
+        if (this.rocket_start + 1000 <= this.plane.position.x)
+        {
+            this.rocket_start = -1;
+
+            if (this.velocity_updated)
+            {
+                this.plane.velocity.setLength(this.old_velocity);
+                this.velocity_updated = false;
+            }
+        }
+        else
+        {
+            if (!this.velocity_updated)
+            {
+                this.old_velocity = this.plane.velocity.len();
+                this.plane.velocity.setLength(this.old_velocity * 5);
+                this.plane.velocity.setAngle(0);
+                this.velocity_updated = true;
+            }
         }
     }
 
@@ -214,10 +244,6 @@ GameScreen.prototype.update = function() {
     response.clear();
 
 
-
-
-
-
     //plane fan collision
     if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, response))
     {
@@ -257,12 +283,8 @@ GameScreen.prototype.update = function() {
 
         this.energy_point.set_position(pos_x, Math.random_int(10, 700));
 
-//            this.hud.level += 500;
-//
-//            if (this.hud.level >= 1000)
-//            {
-//                this.hud.level = 1000;
-//            }
+
+        //zgolemi energija
     }
     response.clear();
 
@@ -292,6 +314,11 @@ GameScreen.prototype.update = function() {
 
         //rocket mode
         this.rocket_count++;
+        if (this.rocket_count > 0)
+        {
+            this.rocket_count = 0;
+            this.rocket_start = this.plane.position.x;
+        }
     }
     response.clear();
 
@@ -306,23 +333,23 @@ GameScreen.prototype.update = function() {
 
             if (SAT.pointInCircle(v, this.magnet_plane))
             {
-                console.log(this.coins + 1 + " " + bonus.position.x);
-                bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
-                this.coins++;
 
-                if (this.coins >= this.next_pow_coins)
-                {
-                    this.next_pow_coins += this.next_pow_coins * 0.2;
-                    this.plane.velocity.scale(1.1);
-                    this.min_velocity *= 1.1;
+                var x_dif = this.plane.position.x - bonus.position.x;
+                var y_dif = this.plane.position.y - bonus.position.y;
+                
+                var factor = 10/(Math.get_distance(bonus.position, this.plane.position))*(this.plane.velocity.len()+1);
+                
+                x_dif*=factor;
+                y_dif*=factor;
+                
+                console.log(this.plane.velocity.len());
 
-                    this.coins = 0;
-                }
+                bonus.set_position(bonus.position.x + x_dif, bonus.position.y + y_dif);
+
             }
             response.clear();
         }
     }
-
 
     //  this.hud.update();
 };
@@ -457,7 +484,7 @@ GameScreen.prototype.on_mouse_down = function(event) {
 }
 
 GameScreen.prototype.on_mouse_up = function(event) {
-console.log("Touch: UP");
+    console.log("Touch: UP");
     this.up_key = false;
     this.down_key = false;
 
