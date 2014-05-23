@@ -38,6 +38,10 @@
         ContentManager.add_image('bg', 'assets/images/background.png');
         ContentManager.add_image('ground', 'assets/images/ground.png');
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
+        ContentManager.add_image('energy_bar', 'assets/images/energy_bar.png');
+        ContentManager.add_image('level_bar', 'assets/images/level_bar.png');
+        ContentManager.add_image('magnet_bar', 'assets/images/magnet_bar.png');
+        ContentManager.add_image('rocket_bar', 'assets/images/rocket_bar.png');
         ContentManager.add_image('apple', 'assets/images/apple.png');
         ContentManager.add_image('lemon', 'assets/images/lemon.png');
         ContentManager.add_image('banana', 'assets/images/banana.png');
