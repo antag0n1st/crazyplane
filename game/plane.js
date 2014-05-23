@@ -21,8 +21,8 @@
 
         this.animation_initialize(sprite_sheet);
         
-        this.emiter_point = new Vector(0,0);
-        this.velocity = new Vector(0, 0);
+        
+        this.velocity = new Vector();
         
         this.rotation = 1/1000;
         
@@ -39,50 +39,12 @@
        // log("plane");
     };
     
-    Plane.prototype.smoke = function(){
-        
-        return;
-        
-        this.smoke_time += Ticker.step;
-        
-        
-        var tp = Math.round(this.smoke_time * this.smoke_frequency);
-        
-        var particles_to_emit = tp - this.smoke_count;
-        
-        this.smoke_count = tp;
-        
-        
-        for(var i=0;i<particles_to_emit;i++){
-            
-                var r1 = Math.random_int(0,6);
-                var r2 = Math.random_int(0,6);
-
-                 var pos = this.get_position();
-                 var anchor = Vector.addition(pos,this.emiter_point);
-
-                anchor.x += r1 - 3;
-                anchor.y += r2 - 3;
-                
-                var smoke = new Smoke();
-
-                smoke.set_position(anchor.x,anchor.y);
-                this.get_parent().add_child(smoke); // the smoke will be a sibling
-                
-        }
-        
-        
-       
-        
-        
+    Plane.prototype.steer_up = function(dt){
+        this.velocity.rotate(-dt*this.rotation);
     };
     
-    Plane.prototype.steer_up = function(){
-        this.velocity.rotate(-Ticker.step*this.rotation);
-    };
-    
-    Plane.prototype.steer_down = function(){
-        this.velocity.rotate(Ticker.step*this.rotation);
+    Plane.prototype.steer_down = function(dt){
+        this.velocity.rotate(dt*this.rotation);
     };
     
     Plane.prototype.on_added_to_parent = function(parent){
@@ -116,12 +78,12 @@
         
     };
     
-    Plane.prototype.rotate_to = function(angle){
-        
-        var a = angle - this.angle;        
-        Drawable.prototype.rotate_to.call(this,angle);
-        this.emiter_point.rotate(Math.degrees_to_radians(a));
-    };
+//    Plane.prototype.rotate_to = function(angle){
+//        
+//        var a = angle - this.angle;        
+//        Drawable.prototype.rotate_to.call(this,angle);
+//        this.emiter_point.rotate(Math.degrees_to_radians(a));
+//    };
     
     Plane.prototype.clear = function(context){
         

@@ -90,7 +90,8 @@ GameScreen.prototype.initialize = function() {
     this.old_velocity = this.plane.velocity.len();
     this.velocity_updated = false;
 
-    this.gravity = new Vector(0, 0.000015);
+    this.gravity = new Vector();
+    this.gravity.y = 0.000015; 
     this.min_velocity = 0.2;//current min velocity of plane
 
     this.coins = 0;
@@ -103,7 +104,7 @@ GameScreen.prototype.initialize = function() {
     this.down_key = false;
     this.space_key = false;
 
-
+    this.response = new SAT.Response();
 
 
 //        this.hud = new Hud();
@@ -154,18 +155,17 @@ GameScreen.prototype.game_over = function() {
     this.is_game_over = true;
 };
 
-GameScreen.prototype.update = function() {
-    //hud
-    //  this.hud.level_points = Math.round_decimal(this.plane.velocity.x, 2) + " " + Math.round_decimal(this.plane.velocity.y, 2) + " " + Math.round_decimal(this.plane.velocity.len(), 2) + " coins: " + this.coins + " angle:" + Math.round_decimal(this.plane.velocity.y, 2) + " " + Math.round_decimal(this.plane.angle, 1);
-
-
+GameScreen.prototype.update = function(dt) {
+    
+    
     //movement
-    if (this.up_key) {// && this.hud.level > 0) {
-        this.plane.steer_up();
+    if (this.up_key == true) {// && this.hud.level > 0) {
+        this.plane.steer_up(dt);
         //   this.hud.level--;
-    } else if (this.down_key) {
-        this.plane.steer_down();
+    } else if (this.down_key == true) {
+        this.plane.steer_down(dt);
     }
+    
 
     //magnet mode
     //in magnet mode?
@@ -181,12 +181,14 @@ GameScreen.prototype.update = function() {
             this.magnet_plane.pos = this.plane.bounds.pos;
         }
     }
+    
+   
 
     //rocket mode
     //in rocket mode?
     if (this.rocket_start > 0)
     {
-        var velocoty_updated;
+        //var velocoty_updated;
         //rocket mode ends
         if (this.rocket_start + 1000 <= this.plane.position.x)
         {
@@ -209,10 +211,17 @@ GameScreen.prototype.update = function() {
             }
         }
     }
+    
+ 
+    
+    
 
     //gravity
-    var v = this.gravity.clone().scale(Ticker.step);
+    var v = this.gravity.clone().scale(dt);
+
     this.plane.velocity.add(v);
+    
+
     if (this.plane.velocity.len() > 0.05)
     {
         this.plane.rotate_to(Math.radians_to_degrees(this.plane.velocity.getAngle()));
@@ -223,38 +232,41 @@ GameScreen.prototype.update = function() {
     {
         this.plane.velocity.scale(0.9975);
     }
+    
+    
 
     //fly
     var p = this.plane.get_position();
-    p.add(this.plane.velocity.clone().scale(Ticker.step));
+    p.add(this.plane.velocity.clone().scale(dt));
     this.plane.set_position(p.x, p.y);
 
-    this.plane.smoke();
+    //this.plane.smoke();
+    
 
     this.track(this.plane);
 
 
     //collisin part
-    var response = new SAT.Response();
+    
 
     //plane - floor
 
 
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground1.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground1.bounds, this.response))
     {
-        this.handle_plane_to_ground_collision(response);
+        this.handle_plane_to_ground_collision(this.response);
     }
-    response.clear();
+    this.response.clear();
 
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground2.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground2.bounds, this.response))
     {
-        this.handle_plane_to_ground_collision(response);
+        this.handle_plane_to_ground_collision(this.response);
     }
-    response.clear();
+    this.response.clear();
 
 
     //plane fan collision
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, this.response))
     {
         var new_angle = this.plane.angle - 0.6;
         this.plane.velocity.setAngle(Math.degrees_to_radians(new_angle));
@@ -262,13 +274,13 @@ GameScreen.prototype.update = function() {
 
         this.add_acc += 1.015;
     }
-    response.clear();
+    this.response.clear();
 
     //plane bonuses collision
     for (var i = 0; i < this.bonuses.length; i++)
     {
         var bonus = this.bonuses[i];
-        if (SAT.testPolygonPolygon(this.plane.bounds, bonus.bounds, response))
+        if (SAT.testPolygonPolygon(this.plane.bounds, bonus.bounds, this.response))
         {
             bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
             this.coins++;
@@ -282,23 +294,31 @@ GameScreen.prototype.update = function() {
                 this.coins = 0;
             }
         }
-        response.clear();
+        this.response.clear();
     }
 
     //plane energy collision
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.energy_point.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.energy_point.bounds, this.response))
     {
         var pos_x = 2 * this.energy_point.position.x + this.energy_point.position.x * 0.1;
 
         this.energy_point.set_position(pos_x, Math.random_int(10, 700));
 
+        //
+        var tween = new TweenTime(0.2,new Bezier(.07,.62,.49,.94),1000,function(){
+            
+            var tween2 = new TweenTime(1,new Bezier(1,.27,.93,.75),600);
+            tween2.run();
+            
+        });
+        tween.run();
 
         //zgolemi energija
     }
-    response.clear();
+    this.response.clear();
 
     //plane magnet collision
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.magnet_point.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.magnet_point.bounds, this.response))
     {
         var pos_x = 2 * this.magnet_point.position.x + this.magnet_point.position.x * 0.1;
 
@@ -312,10 +332,10 @@ GameScreen.prototype.update = function() {
             this.magnet_start = this.plane.position.x;
         }
     }
-    response.clear();
+    this.response.clear();
 
     //plane rocket collision
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.rocket_point.bounds, response))
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.rocket_point.bounds, this.response))
     {
         var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
 
@@ -329,7 +349,7 @@ GameScreen.prototype.update = function() {
             this.rocket_start = this.plane.position.x;
         }
     }
-    response.clear();
+    this.response.clear();
 
 
     //magnet plane mode
@@ -338,7 +358,7 @@ GameScreen.prototype.update = function() {
         for (var i = 0; i < this.bonuses.length; i++)
         {
             var bonus = this.bonuses[i];
-            var v = new V(bonus.bounds.pos.x, bonus.bounds.pos.y);
+            var v = bonus.bounds.pos.clone();
 
             if (SAT.pointInCircle(v, this.magnet_plane))
             {
@@ -351,14 +371,16 @@ GameScreen.prototype.update = function() {
                 x_dif*=factor;
                 y_dif*=factor;
                 
-                console.log(this.plane.velocity.len());
+                //console.log(this.plane.velocity.len());
 
                 bonus.set_position(bonus.position.x + x_dif, bonus.position.y + y_dif);
 
             }
-            response.clear();
+            this.response.clear();
         }
     }
+    
+    
 
     //  this.hud.update();
 };
@@ -373,7 +395,7 @@ GameScreen.prototype.track = function(object) {
     var angle = Math.get_angle(center_camera, target_pos);
     var distance = Math.get_distance(center_camera, target_pos);
 
-    var v = new Vector();
+    var v = SAT.pool.get();
     v.setLength(distance);
     v.setAngle(Math.degrees_to_radians(angle));
     pos.sub(v);
@@ -491,6 +513,18 @@ GameScreen.prototype.on_mouse_down = function(event) {
         this.up_key = false;
     }
 }
+
+GameScreen.prototype.on_draw_finished = function(context){
+    
+    //console.log(this.magnet_plane.pos);
+   // this.magnet_plane.pos;
+   //console.log();
+  context.beginPath();
+    context.arc(this.magnet_plane.pos.x,this.magnet_plane.pos.y,this.magnet_plane.r,0,2*Math.PI);
+    context.stroke();
+   context.closePath();
+    
+};
 
 GameScreen.prototype.on_mouse_up = function(event) {
     console.log("Touch: UP");

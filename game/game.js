@@ -91,8 +91,10 @@
 
         this.stage.clear_canvas();
         
+        this.stage.draw();
+        
         this.navigator.update();
-                
+              
         Actions.run();
 
         // check if the game is paused
@@ -107,7 +109,9 @@
             this.stage.debug_grid();
         }
         
-        this.stage.draw();
+        
+        
+        SAT.pool.reset();
         
     };
 

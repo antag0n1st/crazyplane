@@ -19,7 +19,7 @@
     };
     
     Orb.prototype.pulsate = function() {
-
+        
         if (this.scale_x === this.min_scale) {
             var tween = new TweenScale(this, this.max_scale, new Bezier(1, 1, 1, 1), 500, function() {
                 this.object.pulsate();

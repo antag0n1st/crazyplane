@@ -32,9 +32,7 @@
         
     };
     
-    FanAnimated.prototype.draw = function(context){
-        Animation.prototype.draw.call(this,context);
-    };
+    
     
     FanAnimated.prototype.clear = function(context){
         

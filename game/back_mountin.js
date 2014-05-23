@@ -46,8 +46,8 @@
                 if(sprite.bounds.pos.x < -800){
                     
                   var p =  sprite.get_position();
-                  p.add(new Vector(1600,0));
-                  sprite.set_position(p.x,p.y);
+                  
+                  sprite.set_position(p.x+1600,p.y);
                     
                 }
                 
