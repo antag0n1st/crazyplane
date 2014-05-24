@@ -1,30 +1,50 @@
 //(function(window) {
 
-    function Game() {
-        this.initialize();
-    }
+function Game() {
+    this.initialize();
+}
 
 
 
-    Game.prototype.initialize = function() {
+Game.prototype.initialize = function() {
+
+    this.stage = new Stage();
+
+    this.input = new Input();
+
+    this.input.add_listener('stage');
+
+    this.paused = false;
+    this.pause_callback = function() {
+    };
+    this.music = null;
+    this.click = false;
+    this.navigator = new Navigator();
+    
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////  LOADING SCREEN ASSETS ////////////////////////////////
+    
+    ContentManager.add_image('lights1', 'assets/images/lights1.png');
+    ContentManager.add_image('lights2', 'assets/images/lights2.png');
+    ContentManager.add_image('logo', 'assets/images/logo.png');
+    ContentManager.add_image('loading_fr', 'assets/images/loading_fr.png');
+    ContentManager.add_image('loading_bg', 'assets/images/loading_bg.png');
+                            
+                            // DON'T ADD ASSETS HERE !!!
+                            
+    ////////////////////////////////////////////////////////////////////////////
+    
+    window.game = this;
+
+    ContentManager.download_images(this.stage, function() {
         
-        this.stage = new Stage();
         
-        this.input = new Input();
-        
-        this.input.add_listener('stage');
-        
-        this.paused = false;
-        this.pause_callback = function() {
-        };
-        this.music = null;
-        this.click = false;
-        this.navigator = new Navigator();
-   
-        
+        ////////////////////////////////////////////////////////////////////////
+        //////////////////////   LOAD YOUR ASSETS HERE   ///////////////////////
+
         ContentManager.add_image('dot', 'assets/images/dot.png');
         ContentManager.add_image('anchor', 'assets/images/anchor.png');
-        
+
         ContentManager.add_image('blank_black', 'assets/images/blank_black.png');
         ContentManager.add_image('blank_black_highlighted', 'assets/images/blank_black_highlighted.png');
         ContentManager.add_image('sonic_plane', 'assets/images/sonic_plane.png');
@@ -46,79 +66,84 @@
         ContentManager.add_image('lemon', 'assets/images/lemon.png');
         ContentManager.add_image('banana', 'assets/images/banana.png');
         ContentManager.add_image('cherry', 'assets/images/cherry.png');
-        
+
         ContentManager.add_image('bg1', 'assets/images/bg1.png');
         ContentManager.add_image('bg2', 'assets/images/bg2.png');
         ContentManager.add_image('fg1', 'assets/images/fg1.png');
         ContentManager.add_image('fg2', 'assets/images/fg2.png');
-        ContentManager.add_image('orb', 'assets/images/orb.png');
+        ContentManager.add_image('orb', 'assets/images/orb.png');        
         
-        
+        ////////////////////////////////////////////////////////////////////////
 
-        ContentManager.download_images(this.stage, function() {  
-            window.game.start();
-        });
-
-        window.game = this;
-    };
-
-
-
-
-    Game.prototype.start = function() {
-        var game_screen = new GameScreen();
-        this.navigator.add(game_screen);
-        
-        // we want to do some work before we update the canvas,
-        // otherwise we could use Ticker.addListener(stage);
-        Ticker.add_listener(this);
+        game.navigator.add(new LoadingScreen());
+        Ticker.add_listener(game);
         // Targeting 30 FPS
         Ticker.set_fps(30);
         Ticker.start();
+        
+        ContentManager.download_images(this.stage, function() {
+            window.setTimeout(function(){
+                game.start();
+            },1500);
+        });
+
+
+    });
+
+
+
+};
+
+
+
+
+Game.prototype.start = function() {
+    var game_screen = new GameScreen();
+    this.navigator.add(game_screen);
+};
+
+
+/**
+ * It pauses the game , and call back should display other stage
+ * @param {type} callback
+ * @returns {undefined}
+ */
+Game.prototype.pause = function(callback) {
+
+    this.paused = true;
+    this.pause_callback = callback || function() {
     };
 
-
-    /**
-     * It pauses the game , and call back should display other stage
-     * @param {type} callback
-     * @returns {undefined}
-     */
-    Game.prototype.pause = function(callback) {
-
-        this.paused = true;
-        this.pause_callback = callback || function() {
-        };
-
-    };
+};
 
 
-    Game.prototype.tick = function() {
+Game.prototype.tick = function() {
 
-        this.stage.clear_canvas();
-        
-        this.stage.draw();
-        
-        this.navigator.update();
-              
-        Actions.run();
+    this.stage.clear_canvas();
 
-        // check if the game is paused
-        if (this.paused) {
-            Ticker.stop();
-            this.paused = !this.paused;
-            this.pause_callback();
-        }
+    this.stage.draw();
+
+    this.navigator.update();
+
+    Actions.run();
+
+    // check if the game is paused
+    if (this.paused) {
+        Ticker.stop();
+        this.paused = !this.paused;
+        this.pause_callback();
+    }
 
 
-        if (Config.debug) {
-            this.stage.debug_grid();
-        }
-        
-        
-        
-        SAT.pool.reset();
-        
-    };
+    if (Config.debug) {
+        this.stage.debug_grid();
+    }
+
+
+
+    SAT.pool.reset();
+
+};
 
 //    window.Game = Game;
 //
