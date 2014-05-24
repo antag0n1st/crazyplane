@@ -362,12 +362,15 @@ GameScreen.prototype.update = function(dt) {
 
         //rocket mode
         this.hud.rocket_progress++;
-        if (this.hud.rocket_progress >= this.hud.next_rocket)
+        if (this.hud.rocket_progress >= 1)//this.hud.next_rocket)
         {
             this.hud.next_rocket++;
             this.hud.rocket_progress = 0;
             this.rocket_start = this.plane.position.x;
         }
+        
+        var hero_tween = new TweenShake(this,2,null,null,1000);        
+        hero_tween.run();
     }
     this.response.clear();
 
