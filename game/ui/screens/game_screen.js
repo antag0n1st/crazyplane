@@ -145,9 +145,6 @@ GameScreen.prototype.initialize = function() {
 
 };
 
-GameScreen.prototype.game_over = function() {
-    this.is_game_over = true;
-};
 
 
 GameScreen.prototype.update = function(dt) {
@@ -559,10 +556,10 @@ GameScreen.prototype.on_draw_finished = function(context) {
     //console.log(this.magnet_plane.pos);
     // this.magnet_plane.pos;
     //console.log();
-    context.beginPath();
-    context.arc(this.magnet_plane.pos.x, this.magnet_plane.pos.y, this.magnet_plane.r, 0, 2 * Math.PI);
-    context.stroke();
-    context.closePath();
+//    context.beginPath();
+//    context.arc(this.magnet_plane.pos.x, this.magnet_plane.pos.y, this.magnet_plane.r, 0, 2 * Math.PI);
+//    context.stroke();
+//    context.closePath();
 
 };
 
@@ -587,10 +584,13 @@ GameScreen.prototype.on_mouse_move = function(event) {
 
 GameScreen.prototype.game_over = function() {
 
-    this.over_alert.set_position(10, 10);
-    this.over_alert.z_index = 100;
-    this.add_child(this.over_alert);
-   
+    if(!this.is_game_over){
+        this.is_game_over = true;
+        this.over_alert.set_position(10, 10);
+        this.over_alert.z_index = 100;
+        this.add_child(this.over_alert);
+    }
+    
 };
 
 GameScreen.prototype.show = function() {
