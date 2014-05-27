@@ -1,13 +1,13 @@
 //(function(window, undefined) {
 
-    function Rocket() {
+    function Fuel() {
         this.initialize();
     }
 
-    Rocket.prototype = new Sprite();
-    Rocket.prototype.sprite_initialize = Rocket.prototype.initialize;
-    Rocket.prototype.initialize = function() {
-        this.sprite_initialize('rocket_powerup'); // your image name
+    Fuel.prototype = new Sprite();
+    Fuel.prototype.sprite_initialize = Fuel.prototype.initialize;
+    Fuel.prototype.initialize = function() {
+        this.sprite_initialize('fuel_powerup'); // your image name
 
         this.z_index = -1;
         this.set_anchor(0.5, 0.5);
@@ -18,7 +18,7 @@
 
     };
 
-    Rocket.prototype.pulsate = function() {
+    Fuel.prototype.pulsate = function() {
 
         var that = this;
 
@@ -37,21 +37,21 @@
 
     };
 
-    Rocket.prototype.on_added_to_parent = function(parent) {
+    Fuel.prototype.on_added_to_parent = function(parent) {
         Drawable.prototype.on_added_to_parent.call(this, parent);
 
     };
 
-    Rocket.prototype.on_remove_from_parent = function(parent) {
+    Fuel.prototype.on_remove_from_parent = function(parent) {
         Drawable.prototype.on_remove_from_parent.call(this, parent);
 
     };
 
-    Rocket.prototype.on_draw = function(context) {
+    Fuel.prototype.on_draw = function(context) {
 
     };
 
 
-//    window.Rocket = Rocket;
+//    window.Fuel = Fuel;
 //
 //}(window));

@@ -34,11 +34,6 @@ GameScreen.prototype.initialize = function() {
     this.front_layer.add_child(this.ground);
 
     this.plane = new Plane();
-    this.plane.bounds = new Polygon(new Vector(), [
-        new Vector(-54, 14),
-        new Vector(54, -6),
-        new Vector(-54, -8)
-    ]);
 
 
 
@@ -71,9 +66,9 @@ GameScreen.prototype.initialize = function() {
         this.bonuses.push(b);
     }
 
-    this.energy_point = new Energy();
-    this.energy_point.set_position(Math.random_int(4000, 8000), Math.random_int(50, 700));
-    this.front_layer.add_child(this.energy_point);
+    this.fuel_point = new Fuel();
+    this.fuel_point.set_position(Math.random_int(4000, 8000), Math.random_int(50, 700));
+    this.front_layer.add_child(this.fuel_point);
 
     this.magnet_point = new Magnet();
     this.magnet_point.set_position(2000, 300);// Math.random_int(50, 700));
@@ -106,10 +101,10 @@ GameScreen.prototype.initialize = function() {
     this.hud = new Hud();
     this.hud.z_index = 25;
     this.hud.set_position(0, 0);
-//        
-//        
-//
-//        var tween = new Tween(this.hud, {x: 0, y: -100}, new Bezier(1, 1, 1, 1), 1000, function() {
+
+
+
+//        var tween = new Tween(this.hud, {x: -100, y: -100}, new Bezier(1, 1, 1, 1), 1000, function() {
 //
 //            var tween = new Tween(this.object, {x: 0, y: 0}, new Bezier(1, 1, 1, 1), 1000, function() {
 //
@@ -118,11 +113,14 @@ GameScreen.prototype.initialize = function() {
 //
 //        });
 //        tween.run();
-    this.hud.level = 1000;
-    this.hud.level_points = this.plane.velocity.x + " " + this.plane.velocity.y + "level_point: " + this.level_point + " angle:" + this.plane.angle;
+    this.hud.speed = 1000;
+    this.hud.speed_points = this.plane.velocity.x + " " + this.plane.velocity.y + "speed_point: " + this.speed_point + " angle:" + this.plane.angle;
 
     this.add_child(this.hud);
 
+    this.over_alert = new GameOverAlert(1);
+    //this.over_alert.set_position(Config.screen_width / 2 - this.over_alert.width / 2, Config.screen_height / 2 - this.over_alert.height / 2);
+    //this.over_alert.callback = GameScreen.prototype.on_restart_game.bind(this);
 
     var that = this;
 
@@ -153,19 +151,29 @@ GameScreen.prototype.game_over = function() {
 
 
 GameScreen.prototype.update = function(dt) {
-    
+
     //movement
 
-    if (this.up_key && this.hud.energy > 0) {
-        console.log(this.plane.angle);
-        this.plane.steer_up(dt);
-        this.hud.decrease_energy();
-
-    } else if (this.down_key) {
-        this.plane.steer_down(dt);
-
+    //backward flying
+    if (this.plane.angle < -90 || this.plane.angle > 90)
+    {
+        if (this.down_key) {
+            this.plane.steer_down(dt);
+            this.hud.decrease_fuel();
+        }
     }
-    
+    //foreward flying
+    else {
+        if (this.up_key && this.hud.fuel > 0) {
+            console.log(this.plane.angle);
+            this.plane.steer_up(dt);
+            this.hud.decrease_fuel();
+
+        } else if (this.down_key) {
+            this.plane.steer_down(dt);
+        }
+    }
+
 
     //magnet mode
     //in magnet mode?
@@ -181,8 +189,8 @@ GameScreen.prototype.update = function(dt) {
             this.magnet_plane.pos = this.plane.bounds.pos;
         }
     }
-    
-   
+
+
 
     //rocket mode
     //in rocket mode?
@@ -190,7 +198,7 @@ GameScreen.prototype.update = function(dt) {
     {
         //var velocoty_updated;
         //rocket mode ends
-        if (this.rocket_start + 1000 <= this.plane.position.x)
+        if (this.rocket_start + 3000 <= this.plane.position.x)
         {
             this.rocket_start = -1;
 
@@ -211,16 +219,16 @@ GameScreen.prototype.update = function(dt) {
             }
         }
     }
-    
- 
-    
-    
+
+
+
+
 
     //gravity
     var v = this.gravity.clone().scale(dt);
 
     this.plane.velocity.add(v);
-    
+
 
     if (this.plane.velocity.len() > 0.05)
     {
@@ -231,12 +239,13 @@ GameScreen.prototype.update = function(dt) {
     if (this.plane.angle < -90 || this.plane.angle > 90)
     {
         //additional gravity
-        var v = this.aditional_gravity.clone().scale(Ticker.step);
-        this.plane.velocity.add(v);
-        if (this.plane.velocity.len() > 0.05)
-        {
-            this.plane.rotate_to(Math.radians_to_degrees(this.plane.velocity.getAngle()));
-        }
+//        var v = this.aditional_gravity.clone().scale(Ticker.step);
+//        this.plane.velocity.add(v);
+//        if (this.plane.velocity.len() > 0.05)
+//        {
+//            this.plane.rotate_to(Math.radians_to_degrees(this.plane.velocity.getAngle()));
+//        }
+        this.plane.steer_up(dt * 2);
     }
 
     //deceleration
@@ -244,8 +253,8 @@ GameScreen.prototype.update = function(dt) {
     {
         this.plane.velocity.scale(0.9975);
     }
-    
-    
+
+
 
     //fly
     var p = this.plane.get_position();
@@ -253,13 +262,13 @@ GameScreen.prototype.update = function(dt) {
     this.plane.set_position(p.x, p.y);
 
     //this.plane.smoke();
-    
+
 
     this.track(this.plane);
 
 
     //collisin part
-    
+
 
     //plane - floor
 
@@ -295,42 +304,42 @@ GameScreen.prototype.update = function(dt) {
         if (SAT.testPolygonPolygon(this.plane.bounds, bonus.bounds, this.response))
         {
             bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
-            this.hud.level_progress++;
+            this.hud.speed_progress++;
 
-            //next level is reached
-            if (this.hud.level_progress >= this.hud.next_level)
+            //next speed is reached
+            if (this.hud.speed_progress >= this.hud.next_speed)
             {
-                this.hud.next_level += this.hud.next_level * 0.2;//increase for 20% next level
+                this.hud.next_speed += this.hud.next_speed * 0.2;//increase for 20% next speed
                 this.plane.velocity.scale(1.1);
                 this.min_velocity *= 1.1;
 
-                this.hud.level_progress = 0;
+                this.hud.speed_progress = 0;
             }
         }
         this.response.clear();
     }
 
-    //plane energy collision
-    if (SAT.testPolygonPolygon(this.plane.bounds, this.energy_point.bounds, this.response))
+    //plane fuel collision
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.fuel_point.bounds, this.response))
     {
-        var pos_x = 2 * this.energy_point.position.x + this.energy_point.position.x * 0.1;
+        var pos_x = 2 * this.fuel_point.position.x + this.fuel_point.position.x * 0.1;
 
-        this.energy_point.set_position(pos_x, Math.random_int(10, 700));
+        this.fuel_point.set_position(pos_x, Math.random_int(10, 700));
 
 
         //
-        var tween = new TweenTime(0.2,new Bezier(.07,.62,.49,.94),1000,function(){
-            
-            var tween2 = new TweenTime(1,new Bezier(1,.27,.93,.75),600);
+        var tween = new TweenTime(0.2, new Bezier(.07, .62, .49, .94), 1000, function() {
+
+            var tween2 = new TweenTime(1, new Bezier(1, .27, .93, .75), 600);
             tween2.run();
-            
+
         });
         tween.run();
 
         //zgolemi energija
 
         //increse energija
-        this.hud.increase_energy();
+        this.hud.increase_fuel();
 
     }
     this.response.clear();
@@ -362,15 +371,16 @@ GameScreen.prototype.update = function(dt) {
 
         //rocket mode
         this.hud.rocket_progress++;
-        if (this.hud.rocket_progress >= 1)//this.hud.next_rocket)
+        if (this.hud.rocket_progress >= this.hud.next_rocket)
         {
             this.hud.next_rocket++;
             this.hud.rocket_progress = 0;
             this.rocket_start = this.plane.position.x;
+
+            var hero_tween = new TweenShake(this, 2, null, null, 3000);
+            hero_tween.run();
         }
-        
-        var hero_tween = new TweenShake(this,2,null,null,1000);        
-        hero_tween.run();
+
     }
     this.response.clear();
 
@@ -403,8 +413,14 @@ GameScreen.prototype.update = function(dt) {
             this.response.clear();
         }
     }
-    
-    
+
+    //game over
+    if (this.plane.velocity.len() === 0 && this.plane.position.y > 745)
+    {
+        //this.plane.
+        //console.log("game over");
+        this.game_over();
+    }
 
     //  this.hud.update();
 };
@@ -461,11 +477,11 @@ GameScreen.prototype.track = function(object) {
         this.fan.set_position(this.plane.position.x + Math.random_int(4500, 5500), this.fan.position.y);
     }
 
-    //energy desappear when screen pass it and its relocated
-    if (this.energy_point.position.x + 350 < this.plane.position.x)
+    //fuel desappear when screen pass it and its relocated
+    if (this.fuel_point.position.x + 350 < this.plane.position.x)
     {
-        var pos_x = 2 * this.energy_point.position.x + this.energy_point.position.x * 0.1;
-        this.energy_point.set_position(pos_x, Math.random_int(10, 700));
+        var pos_x = 2 * this.fuel_point.position.x + this.fuel_point.position.x * 0.1;
+        this.fuel_point.set_position(pos_x, Math.random_int(10, 700));
     }
 
     //magnet desappear when screen pass it and its relocated
@@ -538,16 +554,16 @@ GameScreen.prototype.on_mouse_down = function(event) {
     }
 }
 
-GameScreen.prototype.on_draw_finished = function(context){
-    
+GameScreen.prototype.on_draw_finished = function(context) {
+
     //console.log(this.magnet_plane.pos);
-   // this.magnet_plane.pos;
-   //console.log();
-  context.beginPath();
-    context.arc(this.magnet_plane.pos.x,this.magnet_plane.pos.y,this.magnet_plane.r,0,2*Math.PI);
+    // this.magnet_plane.pos;
+    //console.log();
+    context.beginPath();
+    context.arc(this.magnet_plane.pos.x, this.magnet_plane.pos.y, this.magnet_plane.r, 0, 2 * Math.PI);
     context.stroke();
-   context.closePath();
-    
+    context.closePath();
+
 };
 
 GameScreen.prototype.on_mouse_up = function(event) {
@@ -569,7 +585,13 @@ GameScreen.prototype.on_mouse_move = function(event) {
 
 }
 
+GameScreen.prototype.game_over = function() {
 
+    this.over_alert.set_position(10, 10);
+    this.over_alert.z_index = 100;
+    this.add_child(this.over_alert);
+   
+};
 
 GameScreen.prototype.show = function() {
     Screen.prototype.show.call(this);

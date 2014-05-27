@@ -7,9 +7,8 @@
     Magnet.prototype = new Sprite();
     Magnet.prototype.sprite_initialize = Magnet.prototype.initialize;
     Magnet.prototype.initialize = function() {
-        this.sprite_initialize('cherry'); // your image name
+        this.sprite_initialize('magnet_powerup'); // your image name
 
-        this.images = ['cherry', 'lemon', 'apple', 'cherry', 'banana'];
         this.z_index = -1;
         this.set_anchor(0.5, 0.5);
 
@@ -36,12 +35,6 @@
 
         tween.run();
 
-    };
-
-    Magnet.prototype.change_image = function() {
-        this.image = ContentManager.images[this.images[ Math.random_int(0, this.images.length - 1) ]].image;
-        this.set_size(this.image.width, this.image.height);
-        this.set_anchor(0.5, 0.5);
     };
 
     Magnet.prototype.on_added_to_parent = function(parent) {

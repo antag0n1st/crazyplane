@@ -11,12 +11,12 @@
 
         this.set_size(Config.screen_width, 50);
 
-        this.level;
-        this.level_points;
+        this.speed;
+        this.speed_points;
         this.points;
 
-        this.level_label = new Label();
-        this.level_label.set({
+        this.speed_label = new Label();
+        this.speed_label.set({
             text: "Energy: ",
             text_align: "left",
             text_valign: 'middle',
@@ -24,10 +24,10 @@
             text_font_name: 'Special Elite',
             text_size: 28
         });
-        this.level_label.set_position(20, 30);
+        this.speed_label.set_position(20, 30);
 
-        this.level_points_label = new Label();
-        this.level_points_label.set({
+        this.speed_points_label = new Label();
+        this.speed_points_label.set({
             text: "Info: ",
             text_align: "left",
             text_valign: 'middle',
@@ -35,7 +35,7 @@
             text_font_name: 'Special Elite',
             text_size: 28
         });
-        this.level_points_label.set_position(170, 30);
+        this.speed_points_label.set_position(170, 30);
 //        
 //        this.points_label = new Label();
 //        this.points_label.set({
@@ -48,54 +48,63 @@
 //        });
 //        this.points_label.set_position(600, 30);
 
-        this.add_child(this.level_label);
-        this.add_child(this.level_points_label);
+        //this.add_child(this.speed_label);
+        //this.add_child(this.speed_points_label);
         //        this.add_child(this.points_label);
         
         
-        //energy part
-        this.energy_bar = new Sprite("energy_bar");
-        this.energy_bar.set_position(10, 10);
-        this.energy_bar.set_scale(0.5);
-        this.max_width=this.energy_bar.width;
+        //fuel part
+        this.fuel_bg = new Sprite("fuel_bg");
+        this.fuel_bg.set_position(10, 10);
+        this.fuel_bar = new Sprite("fuel_bar");
+        this.fuel_bar.set_position(70, 16);
+        this.max_width=this.fuel_bar.width;
         
-        this.max_energy = 1000; //maximum energy
-        this.energy = this.max_energy; //current energy
+        this.max_fuel = 500; //maximum fuel
+        this.fuel = this.max_fuel; //current fuel
         
-        this.add_child(this.energy_bar);
+        this.add_child(this.fuel_bg);
+        this.add_child(this.fuel_bar);
         
         
-        //level part
-        this.level_bar = new Sprite("level_bar");
-        this.level_bar.set_position(310, 10);
-        this.level_bar.set_scale(0.5);
-        this.level_bar.width=0;
         
-        this.level_progress = 0;
-        this.next_level=10;
+        //speed part
+        this.speed_bg = new Sprite("speed_bg");
+        this.speed_bg.set_position(260, 14);
+        this.speed_bar = new Sprite("speed_bar");
+        this.speed_bar.set_position(327, 14);
+        this.speed_bar.width=0;
         
-        this.add_child(this.level_bar);
+        this.speed_progress = 0;
+        this.next_speed=10;
+        
+        this.add_child(this.speed_bg);
+        this.add_child(this.speed_bar);
         
         //magnet part
+        this.magnet_bg = new Sprite("magnet_bg");
+        this.magnet_bg.set_position(12, 60);
         this.magnet_bar = new Sprite("magnet_bar");
-        this.magnet_bar.set_position(10, 60);
-        this.magnet_bar.set_scale(0.5);
+        this.magnet_bar.set_position(70, 70);
         this.magnet_bar.width=0;
         
         this.magnet_progress = 0;
         this.next_magnet=3;
         
+        this.add_child(this.magnet_bg);
         this.add_child(this.magnet_bar);
         
         //magnet part
+        this.rocket_bg = new Sprite("rocket_bg");
+        this.rocket_bg.set_position(265, 60);
         this.rocket_bar = new Sprite("rocket_bar");
-        this.rocket_bar.set_position(310, 60);
-        this.rocket_bar.set_scale(0.5);
+        this.rocket_bar.set_position(329, 70);
         this.rocket_bar.width=0;
         
         this.rocket_progress = 0;
         this.next_rocket=3;
         
+        this.add_child(this.rocket_bg);
         this.add_child(this.rocket_bar);
         
     };
@@ -104,16 +113,16 @@
 //        this.points_label.set({
 //            text: "Points: " + this.points
 //        });
-        this.level_points_label.set({
-            text: "Info: " + this.level_points
+        this.speed_points_label.set({
+            text: "Info: " + this.speed_points
         });
-        this.level_label.set({
-            text: "Energy: " + this.energy
+        this.speed_label.set({
+            text: "Fuel: " + this.fuel
         });
         
         //console.log(this.magnet_progress);
-        this.energy_bar.width=(this.max_width*this.energy/this.max_energy);
-        this.level_bar.width=(this.max_width*this.level_progress/this.next_level);
+        this.fuel_bar.width=(this.max_width*this.fuel/this.max_fuel);
+        this.speed_bar.width=(this.max_width*this.speed_progress/this.next_speed);
         this.magnet_bar.width=(this.max_width*this.magnet_progress/this.next_magnet);
         this.rocket_bar.width=(this.max_width*this.rocket_progress/this.next_rocket);
     };
@@ -136,16 +145,16 @@
 
     };
     
-    Hud.prototype.increase_energy = function()
+    Hud.prototype.increase_fuel = function()
     {
-        this.energy+=100;
-        if(this.energy>1000)
-            this.energy=1000;
+        this.fuel+=100;
+        if(this.fuel>1000)
+            this.fuel=1000;
     };
     
-    Hud.prototype.decrease_energy = function()
+    Hud.prototype.decrease_fuel = function()
     {
-        this.energy--;
+        this.fuel--;
     };
 
     window.Hud = Hud;

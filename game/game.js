@@ -58,10 +58,22 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('bg', 'assets/images/background.png');
         ContentManager.add_image('ground', 'assets/images/ground.png');
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
-        ContentManager.add_image('energy_bar', 'assets/images/energy_bar.png');
-        ContentManager.add_image('level_bar', 'assets/images/level_bar.png');
+        
+        ContentManager.add_image('speed_bar', 'assets/images/speed_bar.png');
+        ContentManager.add_image('speed_bg', 'assets/images/speed_bg.png');
+        ContentManager.add_image('fuel_bar', 'assets/images/fuel_bar.png');
+        ContentManager.add_image('fuel_bg', 'assets/images/fuel_bg.png');
+        ContentManager.add_image('fuel_powerup', 'assets/images/fuel_powerup.png');
         ContentManager.add_image('magnet_bar', 'assets/images/magnet_bar.png');
+        ContentManager.add_image('magnet_bg', 'assets/images/magnet_bg.png');
+        ContentManager.add_image('magnet_powerup', 'assets/images/magnet_powerup.png');
         ContentManager.add_image('rocket_bar', 'assets/images/rocket_bar.png');
+        ContentManager.add_image('rocket_bg', 'assets/images/rocket_bg.png');
+        ContentManager.add_image('rocket_powerup', 'assets/images/rocket_powerup.png');
+        
+
+        ContentManager.add_image('message_box', 'assets/images/message_box.png');
+        ContentManager.add_image('button', 'assets/images/button.png');
         ContentManager.add_image('apple', 'assets/images/apple.png');
         ContentManager.add_image('lemon', 'assets/images/lemon.png');
         ContentManager.add_image('banana', 'assets/images/banana.png');
