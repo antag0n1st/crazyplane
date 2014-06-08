@@ -11,45 +11,33 @@
 
         this.set_size(Config.screen_width, 50);
 
-        this.speed;
-        this.speed_points;
-        this.points;
+        this.speed = 0;
+        this.meters = 0;
 
         this.speed_label = new Label();
         this.speed_label.set({
-            text: "Energy: ",
+            text: "Speed: ",
             text_align: "left",
             text_valign: 'middle',
             text_color: "#c4d742",
             text_font_name: 'Special Elite',
             text_size: 28
         });
-        this.speed_label.set_position(20, 30);
-
-        this.speed_points_label = new Label();
-        this.speed_points_label.set({
-            text: "Info: ",
+        this.speed_label.set_position(600, 70);
+        
+        this.meters_label = new Label();
+        this.meters_label.set({
+            text: "Meters: ",
             text_align: "left",
             text_valign: 'middle',
             text_color: "#c4d742",
             text_font_name: 'Special Elite',
             text_size: 28
         });
-        this.speed_points_label.set_position(170, 30);
-//        
-//        this.points_label = new Label();
-//        this.points_label.set({
-//            text: "Points: ",
-//            text_align: "left",
-//            text_valign: 'middle',
-//            text_color: "#c4d742",
-//            text_font_name: 'Special Elite',
-//            text_size: 28
-//        });
-//        this.points_label.set_position(600, 30);
+        this.meters_label.set_position(600, 30);
 
-        //this.add_child(this.speed_label);
-        //this.add_child(this.speed_points_label);
+        this.add_child(this.meters_label);
+        this.add_child(this.speed_label);
         //        this.add_child(this.points_label);
 
 
@@ -108,14 +96,11 @@
     };
 
     Hud.prototype.update = function() {
-//        this.points_label.set({
-//            text: "Points: " + this.points
-//        });
-        this.speed_points_label.set({
-            text: "Info: " + this.speed_points
+        this.meters_label.set({
+            text: "Meters: " + this.meters
         });
         this.speed_label.set({
-            text: "Fuel: " + this.fuel
+            text: "Speed: " + this.speed +" m/s"
         });
 
         //console.log(this.magnet_progress);

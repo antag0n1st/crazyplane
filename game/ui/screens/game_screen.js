@@ -91,6 +91,9 @@ GameScreen.prototype.initialize = function() {
 
     this.min_velocity = 0.2;//current min velocity of plane
 
+    this.meter_pixel_ratio = 5/800;//m/px
+    this.pixel_meter_ratio = 800/5;//px/m
+
     this.fall_down = false;
 
     this.up_key = false;
@@ -115,8 +118,8 @@ GameScreen.prototype.initialize = function() {
 //
 //        });
 //        tween.run();
-    this.hud.speed = 1000;
-    this.hud.speed_points = this.plane.velocity.x + " " + this.plane.velocity.y + "speed_point: " + this.speed_point + " angle:" + this.plane.angle;
+//    this.hud.speed = 1000;
+//    this.hud.speed_points = this.plane.velocity.x + " " + this.plane.velocity.y + "speed_point: " + this.speed_point + " angle:" + this.plane.angle;
 
     this.add_child(this.hud);
 
@@ -173,6 +176,9 @@ GameScreen.prototype.update = function(dt) {
         }
     }
 
+    //hud update
+    this.hud.meters = Math.round_decimal(this.plane.position.x*this.meter_pixel_ratio, 1);
+    this.hud.speed = Math.round_decimal(this.plane.velocity.len()*this.pixel_meter_ratio/20,1);
 
     //magnet mode
     //in magnet mode?
