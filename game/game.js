@@ -133,7 +133,7 @@ Game.prototype.tick = function() {
 
     this.stage.clear_canvas();
 
-    this.stage.draw();
+    
 
     this.navigator.update();
 
@@ -151,7 +151,7 @@ Game.prototype.tick = function() {
         this.stage.debug_grid();
     }
 
-
+    this.stage.draw();
 
     SAT.pool.reset();
 

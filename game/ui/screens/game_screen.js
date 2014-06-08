@@ -74,12 +74,14 @@ GameScreen.prototype.initialize = function() {
     this.magnet_point.set_position(2000, 300);// Math.random_int(50, 700));
     this.front_layer.add_child(this.magnet_point);
     this.magnet_start = -1;
+    this.magnet_duration = 3000; //in px
     this.magnet_plane = new Circle(new Vector(), 300);
 
     this.rocket_point = new Rocket();
     this.rocket_point.set_position(2000, Math.random_int(50, 700));
     this.front_layer.add_child(this.rocket_point);
     this.rocket_start = -1;
+    this.rocket_duration = 3000; //in px
     this.old_velocity = this.plane.velocity.len();
     this.velocity_updated = false;
 
@@ -156,15 +158,15 @@ GameScreen.prototype.update = function(dt) {
     {
         if (this.down_key) {
             this.plane.steer_down(dt);
-            this.hud.decrease_fuel();
+            this.hud.decrease_fuel(dt);
         }
     }
     //foreward flying
     else {
         if (this.up_key && this.hud.fuel > 0) {
-            console.log(this.plane.angle);
+            //console.log(this.plane.angle);
             this.plane.steer_up(dt);
-            this.hud.decrease_fuel();
+            this.hud.decrease_fuel(dt);
 
         } else if (this.down_key) {
             this.plane.steer_down(dt);
@@ -177,13 +179,16 @@ GameScreen.prototype.update = function(dt) {
     if (this.magnet_start > 0)
     {
         //magnet mode ends
-        if (this.magnet_start + 10000 <= this.plane.position.x)
+        if (this.magnet_start + this.magnet_duration <= this.plane.position.x)
         {
             this.magnet_start = -1;
+            this.hud.magnet_progress = 0;
         }
         else
         {
             this.magnet_plane.pos = this.plane.bounds.pos;
+            //magnet progrees in range [0, 1]
+            this.hud.magnet_progress = (this.magnet_start + this.magnet_duration - this.plane.position.x) / this.magnet_duration;
         }
     }
 
@@ -195,9 +200,10 @@ GameScreen.prototype.update = function(dt) {
     {
         //var velocoty_updated;
         //rocket mode ends
-        if (this.rocket_start + 3000 <= this.plane.position.x)
+        if (this.rocket_start + this.rocket_duration <= this.plane.position.x)
         {
             this.rocket_start = -1;
+            this.hud.rocket_progress = 0;
 
             if (this.velocity_updated)
             {
@@ -214,6 +220,7 @@ GameScreen.prototype.update = function(dt) {
                 this.plane.velocity.setAngle(0);
                 this.velocity_updated = true;
             }
+            this.hud.rocket_progress = (this.rocket_start + this.rocket_duration - this.plane.position.x) / this.rocket_duration;
         }
     }
 
@@ -323,8 +330,6 @@ GameScreen.prototype.update = function(dt) {
 
         this.fuel_point.set_position(pos_x, Math.random_int(10, 700));
 
-
-        //
         var tween = new TweenTime(0.2, new Bezier(.07, .62, .49, .94), 1000, function() {
 
             var tween2 = new TweenTime(1, new Bezier(1, .27, .93, .75), 600);
@@ -333,9 +338,7 @@ GameScreen.prototype.update = function(dt) {
         });
         tween.run();
 
-        //zgolemi energija
-
-        //increse energija
+        //increse energy
         this.hud.increase_fuel();
 
     }
@@ -349,13 +352,8 @@ GameScreen.prototype.update = function(dt) {
         this.magnet_point.set_position(pos_x, Math.random_int(10, 700));
 
         //magnet mode
-        this.hud.magnet_progress++;
-        if (this.hud.magnet_progress >= this.hud.next_magnet)
-        {
-            this.hud.next_magnet++;
-            this.hud.magnet_progress = 0;
-            this.magnet_start = this.plane.position.x;
-        }
+        this.hud.magnet_progress = 1;
+        this.magnet_start = this.plane.position.x;
     }
     this.response.clear();
 
@@ -367,22 +365,17 @@ GameScreen.prototype.update = function(dt) {
         this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
 
         //rocket mode
-        this.hud.rocket_progress++;
-        if (this.hud.rocket_progress >= this.hud.next_rocket)
-        {
-            this.hud.next_rocket++;
-            this.hud.rocket_progress = 0;
-            this.rocket_start = this.plane.position.x;
+        this.hud.rocket_progress = 1;
+        this.rocket_start = this.plane.position.x;
 
-            var hero_tween = new TweenShake(this, 2, null, null, 3000);
-            hero_tween.run();
-        }
-
+        var hero_tween = new TweenShake(this, 2, null, null, 3000);
+        hero_tween.run();
     }
+
     this.response.clear();
 
 
-    //magnet plane mode
+//magnet plane mode
     if (this.magnet_start > 0)
     {
         for (var i = 0; i < this.bonuses.length; i++)
@@ -411,7 +404,7 @@ GameScreen.prototype.update = function(dt) {
         }
     }
 
-    //game over
+//game over
     if (this.plane.velocity.len() === 0 && this.plane.position.y > 745)
     {
         //this.plane.
@@ -419,7 +412,7 @@ GameScreen.prototype.update = function(dt) {
         this.game_over();
     }
 
-    //  this.hud.update();
+//  this.hud.update();
 };
 
 GameScreen.prototype.track = function(object) {
@@ -584,13 +577,13 @@ GameScreen.prototype.on_mouse_move = function(event) {
 
 GameScreen.prototype.game_over = function() {
 
-    if(!this.is_game_over){
+    if (!this.is_game_over) {
         this.is_game_over = true;
         this.over_alert.set_position(10, 10);
         this.over_alert.z_index = 100;
         this.add_child(this.over_alert);
     }
-    
+
 };
 
 GameScreen.prototype.show = function() {
