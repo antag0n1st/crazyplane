@@ -70,6 +70,8 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('rocket_bar', 'assets/images/rocket_bar.png');
         ContentManager.add_image('rocket_bg', 'assets/images/rocket_bg.png');
         ContentManager.add_image('rocket_powerup', 'assets/images/rocket_powerup.png');
+        ContentManager.add_image('ninja_star', 'assets/images/ninja_star.png');
+        ContentManager.add_image('plane_part', 'assets/images/plane_part.png');
         
 
         ContentManager.add_image('message_box', 'assets/images/message_box.png');

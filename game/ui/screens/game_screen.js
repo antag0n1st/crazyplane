@@ -66,6 +66,9 @@ GameScreen.prototype.initialize = function() {
         this.bonuses.push(b);
     }
 
+    this.plane_parts = [];
+    this.max_plane_parts_length = 50;
+
     this.fuel_point = new Fuel();
     this.fuel_point.set_position(Math.random_int(4000, 8000), Math.random_int(50, 700));
     this.front_layer.add_child(this.fuel_point);
@@ -85,14 +88,19 @@ GameScreen.prototype.initialize = function() {
     this.old_velocity = this.plane.velocity.len();
     this.velocity_updated = false;
 
+    this.obstacle_point = new Obstacle();
+    this.obstacle_point.set_position(1000, 350);
+    this.front_layer.add_child(this.obstacle_point);
+    this.obstacle_collision = false;
+
 
     this.gravity = new Vector(0, 0.000015);
     this.aditional_gravity = new Vector(0, 0.000115);//for backward flying
 
     this.min_velocity = 0.2;//current min velocity of plane
 
-    this.meter_pixel_ratio = 5/800;//m/px
-    this.pixel_meter_ratio = 800/5;//px/m
+    this.meter_pixel_ratio = 5 / 800;//m/px
+    this.pixel_meter_ratio = 800 / 5;//px/m
 
     this.fall_down = false;
 
@@ -177,8 +185,8 @@ GameScreen.prototype.update = function(dt) {
     }
 
     //hud update
-    this.hud.meters = Math.round_decimal(this.plane.position.x*this.meter_pixel_ratio, 1);
-    this.hud.speed = Math.round_decimal(this.plane.velocity.len()*this.pixel_meter_ratio/20,1);
+    this.hud.meters = Math.round_decimal(this.plane.position.x * this.meter_pixel_ratio, 1);
+    this.hud.speed = Math.round_decimal(this.plane.velocity.len() * this.pixel_meter_ratio / 20, 1);
 
     //magnet mode
     //in magnet mode?
@@ -378,7 +386,53 @@ GameScreen.prototype.update = function(dt) {
         hero_tween.run();
     }
 
+    //plane obstacle collision
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.obstacle_point.bounds, this.response))
+    {
+        //console.log(this.response.overlapV.len());
+        if (this.response.overlapV.len() > 30 && !this.obstacle_collision)
+        {
+            this.plane.remove_from_parent();
+            this.plane.velocity = new Vector(0);
+
+            this.obstacle_collision = true;
+
+
+            //create plane parts
+            for (var i = 0; i < this.max_plane_parts_length; i++)
+            {
+                var b = new Plane_part();
+                b.set_position(this.obstacle_point.position.x, this.obstacle_point.position.y);
+                b.velocity = new Vector();
+                b.velocity.setLength(Math.random_float(1, 8));
+                b.velocity.rotate(Math.degrees_to_radians(Math.random_int(0, 360)));
+                this.front_layer.add_child(b);
+                this.plane_parts.push(b);
+            }
+            
+            this.magnet_start = -1;
+            this.hud.magnet_progress = 0;
+            this.rocket_start = -1;
+            this.hud.rocket_progress = 0;
+        }
+    }
+
     this.response.clear();
+
+
+    //plane explosion
+    if (this.obstacle_collision)
+    {
+        var v = new Vector();
+        v.setLength(0.1);
+        v.rotate(3.14/2);
+        for (var i = 0; i < this.max_plane_parts_length; i++)
+        {
+            var b = this.plane_parts[i];
+            b.velocity.add(v);
+            b.set_position(b.position.x + b.velocity.x, b.position.y + b.velocity.y);
+        }
+    }
 
 
 //magnet plane mode
@@ -415,6 +469,11 @@ GameScreen.prototype.update = function(dt) {
     {
         //this.plane.
         //console.log("game over");
+        this.game_over();
+    }
+    
+    if(this.obstacle_collision && this.plane.position.y > 600)
+    {
         this.game_over();
     }
 
@@ -492,6 +551,13 @@ GameScreen.prototype.track = function(object) {
     {
         var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
         this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
+    }
+    
+    //obstacle desappear when screen pass it and its relocated
+    if (this.obstacle_point.position.x + 350 < this.plane.position.x)
+    {
+        var pos_x = 2 * this.obstacle_point.position.x + this.obstacle_point.position.x * 0.1;
+        this.obstacle_point.set_position(pos_x, Math.random_int(10, 700));
     }
 };
 
