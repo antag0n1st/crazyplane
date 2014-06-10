@@ -218,7 +218,7 @@ GameScreen.prototype.update = function(dt) {
         {
             this.rocket_start = -1;
             this.hud.rocket_progress = 0;
-
+            ContentManager.sounds.rocket.stop();
             if (this.velocity_updated)
             {
                 this.plane.velocity.setLength(this.old_velocity);
@@ -323,6 +323,7 @@ GameScreen.prototype.update = function(dt) {
         {
             bonus.set_position(this.plane.position.x + Math.random_int(600, 1800), Math.random_int(0, 690));
             this.hud.speed_progress++;
+            ContentManager.sounds.collect.volume(0.2).play();
 
             //next speed is reached
             if (this.hud.speed_progress >= this.hud.next_speed)
@@ -377,13 +378,17 @@ GameScreen.prototype.update = function(dt) {
         var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
 
         this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
-
+        
+        if(this.rocket_start < 0 ){
+            ContentManager.sounds.rocket.loop(true).volume(0.4).play();
+        }
         //rocket mode
         this.hud.rocket_progress = 1;
         this.rocket_start = this.plane.position.x;
 
         var hero_tween = new TweenShake(this, 2, null, null, 3000);
         hero_tween.run();
+        
     }
 
     //plane obstacle collision
@@ -396,7 +401,8 @@ GameScreen.prototype.update = function(dt) {
             this.plane.velocity = new Vector(0);
 
             this.obstacle_collision = true;
-
+                ContentManager.sounds.crash.volume(1).play();
+                ContentManager.sounds.rocket.stop();
 
             //create plane parts
             for (var i = 0; i < this.max_plane_parts_length; i++)
@@ -499,7 +505,7 @@ GameScreen.prototype.track = function(object) {
 
     this.front_layer.set_position(pos.x, pos.y);
 
-    var far_k = 0.2;
+    var far_k = 0.05;
     var near_k = 0.4;
 
     this.back_mountin.set_position(pos.x * far_k, pos.y * far_k);

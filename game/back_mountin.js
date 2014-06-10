@@ -13,10 +13,10 @@
         
         this.sprites = [];
         
-        var bm1 = new Bm1();
+        var bm1 = new Sprite('bm1');
         bm1.set_position(0,100);
         
-        var bm2 = new Bm2();
+        var bm2 = new Sprite('bm2');
         bm2.set_position(800,100);
         
         this.add_child(bm1);

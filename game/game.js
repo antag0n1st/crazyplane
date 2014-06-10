@@ -47,14 +47,9 @@ Game.prototype.initialize = function() {
 
         ContentManager.add_image('blank_black', 'assets/images/blank_black.png');
         ContentManager.add_image('blank_black_highlighted', 'assets/images/blank_black_highlighted.png');
-        ContentManager.add_image('sonic_plane', 'assets/images/sonic_plane.png');
-        ContentManager.add_image('smoke', 'assets/images/smoke.png');
         ContentManager.add_image('fan', 'assets/images/fan.png');
         ContentManager.add_image('bm1', 'assets/images/mountin_1.png');
         ContentManager.add_image('bm2', 'assets/images/mountin_2.png');
-        ContentManager.add_image('fm1', 'assets/images/front_mountin_1.png');
-        ContentManager.add_image('fm2', 'assets/images/front_mountin_2.png');
-        ContentManager.add_image('fm3', 'assets/images/front_mountin_3.png');
         ContentManager.add_image('bg', 'assets/images/background.png');
         ContentManager.add_image('ground', 'assets/images/ground.png');
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
@@ -76,16 +71,16 @@ Game.prototype.initialize = function() {
 
         ContentManager.add_image('message_box', 'assets/images/message_box.png');
         ContentManager.add_image('button', 'assets/images/button.png');
-        ContentManager.add_image('apple', 'assets/images/apple.png');
-        ContentManager.add_image('lemon', 'assets/images/lemon.png');
-        ContentManager.add_image('banana', 'assets/images/banana.png');
-        ContentManager.add_image('cherry', 'assets/images/cherry.png');
 
         ContentManager.add_image('bg1', 'assets/images/bg1.png');
         ContentManager.add_image('bg2', 'assets/images/bg2.png');
         ContentManager.add_image('fg1', 'assets/images/fg1.png');
         ContentManager.add_image('fg2', 'assets/images/fg2.png');
-        ContentManager.add_image('orb', 'assets/images/orb.png');        
+        ContentManager.add_image('orb', 'assets/images/orb.png');    
+        
+        ContentManager.add_sound('collect','assets/sounds/collect');
+        ContentManager.add_sound('rocket','assets/sounds/rocket');
+        ContentManager.add_sound('crash','assets/sounds/crash');
         
         ////////////////////////////////////////////////////////////////////////
 
@@ -95,10 +90,10 @@ Game.prototype.initialize = function() {
         Ticker.set_fps(30);
         Ticker.start();
         
-        ContentManager.download_images(this.stage, function() {
-            window.setTimeout(function(){
+        ContentManager.download_resources(this.stage, function() {
+           // window.setTimeout(function(){
                 game.start();
-            },1500);
+           // },1500);
         });
 
 
@@ -112,8 +107,8 @@ Game.prototype.initialize = function() {
 
 
 Game.prototype.start = function() {
-    var game_screen = new GameScreen();
-    this.navigator.add(game_screen);
+    var screen = new HomeScreen();
+    this.navigator.add(screen);
 };
 
 
