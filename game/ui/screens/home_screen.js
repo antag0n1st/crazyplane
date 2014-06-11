@@ -60,6 +60,7 @@
       if(Config.is_sound_on){
           this.sound_button.image = ContentManager.images.sound_on;
           Howler.unmute();
+          ContentManager.sounds.collect.play();
       }else{
           this.sound_button.image = ContentManager.images.sound_off;
           Howler.mute();
