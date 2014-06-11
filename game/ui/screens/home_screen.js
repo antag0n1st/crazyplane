@@ -21,6 +21,7 @@
         background.z_index = -2;
         
         var backgorund2 = new Sprite('home_screen_background');
+        backgorund2.alpha = 0.4;
         backgorund2.z_index = 0;
         
         var mountain = new Sprite('bm1');
