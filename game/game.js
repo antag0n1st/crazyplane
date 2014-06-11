@@ -76,7 +76,12 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('bg2', 'assets/images/bg2.png');
         ContentManager.add_image('fg1', 'assets/images/fg1.png');
         ContentManager.add_image('fg2', 'assets/images/fg2.png');
-        ContentManager.add_image('orb', 'assets/images/orb.png');    
+        ContentManager.add_image('orb', 'assets/images/orb.png'); 
+        
+        ContentManager.add_image('play_button', 'assets/images/play_button.png');
+        ContentManager.add_image('sound_off', 'assets/images/sound_off_button.png');
+        ContentManager.add_image('sound_on', 'assets/images/sound_on_button.png');
+        ContentManager.add_image('home_screen_background', 'assets/images/home_screen_background.png');
         
         ContentManager.add_sound('collect','assets/sounds/collect');
         ContentManager.add_sound('rocket','assets/sounds/rocket');

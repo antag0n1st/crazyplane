@@ -9,39 +9,37 @@
     HomeScreen.prototype.initialize = function(){        
         this.screen_initialize();
         
-        this.play_button = new Button({image:ContentManager.images.button});
-        this.play_button.text = "Play Game";
-        this.play_button.font_family = 'Sofadi One';
-        this.play_button.text_color = "#000000";
-        this.play_button.font_size = 22;
+        this.play_button = new Button({image:ContentManager.images.play_button});
+        
         this.play_button.on_mouse_up = HomeScreen.prototype.on_play.bind(this);
         
-        this.sound_button = new Button({image:ContentManager.images.button});
-        this.sound_button.text = "Sound: ON";
-        this.sound_button.font_family = 'Sofadi One';
-        this.sound_button.text_color = "#000000";
-        this.sound_button.font_size = 22;
+        this.sound_button = new Button({image:ContentManager.images.sound_on});
+        
         this.sound_button.on_mouse_up = HomeScreen.prototype.on_sound.bind(this);
         
         var background = new Sprite('bg');
-        background.z_index = -1;
+        background.z_index = -2;
+        
+        var backgorund2 = new Sprite('home_screen_background');
+        backgorund2.z_index = 0;
         
         var mountain = new Sprite('bm1');
-        mountain.z_index = 0;
+        mountain.z_index = -1;
         mountain.set_position(0,100);
         
         var plane = new Plane();
         plane.play('fly');
-        plane.set_position(380,240);
+        plane.set_position(380,220);
         
         this.add_child(background);
+        this.add_child(backgorund2);
         this.add_child(mountain);
         this.add_child(this.play_button);
         this.add_child(this.sound_button);
         this.add_child(plane);
         
-        this.play_button.set_position( 320,300);
-        this.sound_button.set_position( 320,350);
+        this.play_button.set_position( 250,260);
+        this.sound_button.set_position( 250,350);
         
         this.stop_animations = false;
         
@@ -59,10 +57,10 @@
       Config.is_sound_on = !Config.is_sound_on;
       
       if(Config.is_sound_on){
-          this.sound_button.text = "Sound: ON";
+          this.sound_button.image = ContentManager.images.sound_on;
           Howler.unmute();
       }else{
-          this.sound_button.text = "Sound: OFF";
+          this.sound_button.image = ContentManager.images.sound_off;
           Howler.mute();
       }
       
