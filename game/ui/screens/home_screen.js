@@ -33,7 +33,7 @@
         mountain.set_position(0,100);
         
         var rocket = new RocketPlane();
-        rocket.set_position(300,100);
+        rocket.set_position(400,380);
         rocket.z_index = 10;
         rocket.play('fly');
         this.add_child(rocket);
