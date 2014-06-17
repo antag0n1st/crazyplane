@@ -20,8 +20,12 @@
         var background = new Sprite('bg');
         background.z_index = -2;
         
-        var backgorund2 = new Sprite('home_screen_background');
-        backgorund2.alpha = 0.4;
+        var ground = new Sprite('ground');
+        ground.set_position(0,440);
+        
+        var backgorund2 = new Sprite('fg2');
+        backgorund2.set_position(0,30);
+        backgorund2.alpha = 1;
         backgorund2.z_index = 0;
         
         var mountain = new Sprite('bm1');
@@ -33,9 +37,10 @@
         this.add_child(mountain);
         this.add_child(this.play_button);
         this.add_child(this.sound_button);
+        this.add_child(ground);
         
-        this.play_button.set_position( 250,260);
-        this.sound_button.set_position( 250,350);
+        this.play_button.set_position( 330,180);
+        this.sound_button.set_position( 720,30);
         
         this.stop_animations = false;
         
