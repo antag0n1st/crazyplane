@@ -32,6 +32,12 @@
         mountain.z_index = -1;
         mountain.set_position(0,100);
         
+        var rocket = new RocketPlane();
+        rocket.set_position(200,100);
+        rocket.z_index = 10;
+        rocket.play('fly');
+        this.add_child(rocket);
+        
         this.add_child(background);
         this.add_child(backgorund2);
         this.add_child(mountain);
