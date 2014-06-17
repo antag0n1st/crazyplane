@@ -28,16 +28,11 @@
         mountain.z_index = -1;
         mountain.set_position(0,100);
         
-        var plane = new Plane();
-        plane.play('fly');
-        plane.set_position(380,220);
-        
         this.add_child(background);
         this.add_child(backgorund2);
         this.add_child(mountain);
         this.add_child(this.play_button);
         this.add_child(this.sound_button);
-        this.add_child(plane);
         
         this.play_button.set_position( 250,260);
         this.sound_button.set_position( 250,350);
