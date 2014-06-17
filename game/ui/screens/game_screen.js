@@ -41,6 +41,7 @@ GameScreen.prototype.initialize = function() {
     this.plane.velocity.setLength(0.4);//(0.4);
     this.plane.velocity.rotate(Math.degrees_to_radians(-20));
     this.plane.play('fly');
+    this.plane.z_index = 3;
     this.front_layer.add_child(this.plane);
 
     this.fan = new FanAnimated();
@@ -53,7 +54,8 @@ GameScreen.prototype.initialize = function() {
         new Vector(50, 40)
     ]);
 
-    this.fan.set_position(1400, 690);
+    this.fan.set_position(1400, 700);
+    this.fan.z_index = 2;
     this.front_layer.add_child(this.fan);
 
     this.bonuses = [];
