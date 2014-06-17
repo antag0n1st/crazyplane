@@ -20,10 +20,10 @@
         
         this.direction = new Vector(1, 1);
         this.direction.setAngle(Math.degrees_to_radians(180));
-        this.trust_magnitude = 180 / 1000;
+        this.trust_magnitude = 300 / 1000;
 
-        this.begin_scale = 0.1;
-        this.end_scale = 0.7;
+        this.begin_scale = 0.3;
+        this.end_scale = 1.5;
 
         this.begin_alpha = 0.9;
         this.end_alpha = 0.0;

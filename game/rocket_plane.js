@@ -20,10 +20,16 @@
         this.animation_initialize(sprite_sheet);
         
         
+        this.emiter_point = new Vector(-115,0);
+        this.emitter = new Emitter(this.position,null,Smoke,15/1000);
+        this.emitter.run();
+        
+        
     };
     
     RocketPlane.prototype.on_added_to_parent = function(parent){
         Drawable.prototype.on_added_to_parent.call(this,parent);
+        this.emitter.layer = parent;
         
     };
     
@@ -34,6 +40,8 @@
     
     RocketPlane.prototype.update = function(dt){
         Animation.prototype.update.call(this,dt);
+        
+        this.emitter.emission_point = this.get_position().add(this.emiter_point);
     };
     
     RocketPlane.prototype.clear = function(context){
