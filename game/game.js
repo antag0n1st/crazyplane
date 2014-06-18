@@ -53,6 +53,8 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('bg', 'assets/images/background.png');
         ContentManager.add_image('ground', 'assets/images/ground.png');
         ContentManager.add_image('paperplane', 'assets/images/paperplane.png');
+        ContentManager.add_image('rocket_animated', 'assets/images/rocket_animated.png');
+        ContentManager.add_image('smoke', 'assets/images/smoke.png');
         
         ContentManager.add_image('speed_bar', 'assets/images/speed_bar.png');
         ContentManager.add_image('speed_bg', 'assets/images/speed_bg.png');
