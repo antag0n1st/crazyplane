@@ -13,7 +13,7 @@
         this.image = ContentManager.images.message_box.image;
         this.set_size(this.image.width,this.image.height);
         
-        this.points=0;
+        this.meters=0;
         this.level=0;
         
         this.priority = 19;
@@ -38,9 +38,9 @@
             text_size : 18
         });
         
-        this.points_label = new Label();
-        this.points_label.set({
-            text: "Points: "+ this.points ,
+        this.meters_label = new Label();
+        this.meters_label.set({
+            text: "Points: "+ this.meters ,
             text_align : "left",
             text_valign: 'middle',
             text_color : "black",
@@ -62,7 +62,7 @@
         this.add_child(this.cancel_button);
         this.add_child(this.title);
         this.add_child(this.level_label);
-        this.add_child(this.points_label);
+        this.add_child(this.meters_label);
        
         this.callback = function(){};
         
@@ -77,8 +77,8 @@
         this.title.set_position(this.width/2 - this.title.width/2,85);
 
         this.level_label.set_position(this.width/2 - this.level_label.width/2,this.title.get_position().y + 30);
-        this.points_label.set_position(this.width/2 - this.points_label.width/2,this.level_label.get_position().y + 30);
-        this.cancel_button.set_position(this.width/2 - this.cancel_button.width/2,this.points_label.get_position().y + 25);
+        this.meters_label.set_position(this.width/2 - this.meters_label.width/2,this.level_label.get_position().y + 30);
+        this.cancel_button.set_position(this.width/2 - this.cancel_button.width/2,this.meters_label.get_position().y + 25);
     };
     
     
@@ -98,9 +98,9 @@
         game.input.add(this);
         game.input.add(this.cancel_button);  
         
-         this.level_label.set({text: "Press Reload to try again level " + this.level });
+         this.level_label.set({text: "Press Reload to try again"});
          
-         this.points_label.set({text: "Points: "+ this.points });
+         this.meters_label.set({text: "Meters: "+ this.meters });
         
     };
     

@@ -48,7 +48,7 @@
         this.fuel_bar.set_position(70, 16);
         this.max_width = this.fuel_bar.width;
 
-        this.max_fuel = 500; //maximum fuel
+        this.max_fuel = 1000; //maximum fuel
         this.fuel = this.max_fuel; //current fuel
 
         this.add_child(this.fuel_bg);
@@ -121,11 +121,11 @@
         if (sb > 0)
         {
             this.speed_bar.width = sb;
-            this.speed_bar.visible = false;
+            this.speed_bar.is_visible = true;
         }
         else
         {
-            this.speed_bar.visible = true;
+            this.speed_bar.is_visible = false;
         }
 
         var mb = this.max_width * this.magnet_progress;
@@ -179,14 +179,14 @@
 
     Hud.prototype.increase_fuel = function()
     {
-        this.fuel += 100;
-        if (this.fuel > 1000)
-            this.fuel = 1000;
+        this.fuel += 300;
+        if (this.fuel > this.max_fuel)
+            this.fuel = this.max_fuel;
     };
 
     Hud.prototype.decrease_fuel = function(dt)
     {
-        this.fuel -= (dt / 20);
+        this.fuel -= (dt / 5);
     };
 
     Hud.prototype.decrease_magnet = function(dt)

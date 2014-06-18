@@ -16,22 +16,40 @@ GameScreen.prototype.initialize = function() {
     this.front_mountin = new FrontMountin();
 
     this.sky = new Sprite("bg");
-    this.ground = new Sprite("ground");
-    this.ground.set_position(0, 750);
-    this.ground.z_index = 10;
+//    this.ground = new Sprite("ground");
+//    this.ground.set_position(0, 750);
+//    this.ground.z_index = 10;
 
     this.front_layer.z_index = 8;
     this.front_mountin.z_index = 5;
     this.back_mountin.z_index = 4;
     this.sky.z_index = 3;
 
-
-
     this.add_child(this.front_layer);
     this.add_child(this.front_mountin);
     this.add_child(this.back_mountin);
     this.add_child(this.sky);
-    this.front_layer.add_child(this.ground);
+    //this.front_layer.add_child(this.ground);
+
+    this.up_image = new Sprite("up");
+    this.down_image = new Sprite("down");
+    this.up_image.z_index = 10;
+    this.down_image.z_index = 10;
+    this.down_image.set_position(400, 0);
+
+    var up_alpha = new TweenAlpha(this.up_image, 0, null, 2500, function() {
+        this.object.remove_from_parent()
+    });
+    var down_alpha = new TweenAlpha(this.down_image, 0, null, 2500, function() {
+        this.object.remove_from_parent()
+    });
+
+    up_alpha.run();
+    down_alpha.run();
+
+    this.add_child(this.up_image);
+    this.add_child(this.down_image);
+
 
     this.plane = new Plane();
 
@@ -61,7 +79,7 @@ GameScreen.prototype.initialize = function() {
     for (var i = 0; i < this.max_bonuses_length; i++)
     {
         var b = new Orb();
-        b.set_position(this.plane.position.x + Math.random_int(600, 2800), Math.random_int(20, 690));
+        b.set_position(this.plane.position.x + Math.random_int(600, 3600), Math.random_int(20, 690));
         this.front_layer.add_child(b);
         this.bonuses.push(b);
     }
@@ -70,28 +88,32 @@ GameScreen.prototype.initialize = function() {
     this.max_plane_parts_length = 50;
 
     this.fuel_point = new Fuel();
-    this.fuel_point.set_position(Math.random_int(4000, 8000), Math.random_int(50, 700));
+    this.fuel_point.set_position(Math.random_int(6000, 8000), Math.random_int(50, 700));
     this.front_layer.add_child(this.fuel_point);
+    this.fuel_multi = 0.1;
 
     this.magnet_point = new Magnet();
-    this.magnet_point.set_position(2000, 300);// Math.random_int(50, 700));
+    this.magnet_point.set_position(Math.random_int(5000, 7000), Math.random_int(50, 700));
     this.front_layer.add_child(this.magnet_point);
+    this.magnet_multi = 0.1;
     this.magnet_start = -1;
     this.magnet_duration = 3000; //in px
     this.magnet_plane = new Circle(new Vector(), 300);
 
     this.rocket_point = new Rocket();
-    this.rocket_point.set_position(2000, Math.random_int(50, 700));
+    this.rocket_point.set_position(Math.random_int(4000, 6000), Math.random_int(50, 700));
     this.front_layer.add_child(this.rocket_point);
+    this.rocket_multi = 0.1;
     this.rocket_start = -1;
     this.rocket_duration = 3000; //in px
     this.old_velocity = this.plane.velocity.len();
     this.velocity_updated = false;
 
     this.obstacle_point = new Obstacle();
-    this.obstacle_point.set_position(1000, 350);
+    this.obstacle_point.set_position(Math.random_int(3000, 5000), Math.random_int(100, 700));
     this.front_layer.add_child(this.obstacle_point);
     this.obstacle_collision = false;
+    this.show_game_over_alert = false;
 
 
     this.gravity = new Vector(0, 0.000015);
@@ -115,25 +137,11 @@ GameScreen.prototype.initialize = function() {
     this.hud.z_index = 25;
     this.hud.set_position(0, 0);
 
-
-
-//        var tween = new Tween(this.hud, {x: -100, y: -100}, new Bezier(1, 1, 1, 1), 1000, function() {
-//
-//            var tween = new Tween(this.object, {x: 0, y: 0}, new Bezier(1, 1, 1, 1), 1000, function() {
-//
-//            });
-//            tween.run();
-//
-//        });
-//        tween.run();
-//    this.hud.speed = 1000;
-//    this.hud.speed_points = this.plane.velocity.x + " " + this.plane.velocity.y + "speed_point: " + this.speed_point + " angle:" + this.plane.angle;
-
     this.add_child(this.hud);
 
     this.over_alert = new GameOverAlert(1);
     //this.over_alert.set_position(Config.screen_width / 2 - this.over_alert.width / 2, Config.screen_height / 2 - this.over_alert.height / 2);
-    //this.over_alert.callback = GameScreen.prototype.on_restart_game.bind(this);
+    this.over_alert.callback = GameScreen.prototype.on_restart_game.bind(this);
 
     var that = this;
 
@@ -141,7 +149,11 @@ GameScreen.prototype.initialize = function() {
 
     this.kibo.down('left', function() {
         that.up_key = true;
+    }).down('up', function() {
+        that.up_key = true;
     }).down('right', function() {
+        that.down_key = true;
+    }).down('down', function() {
         that.down_key = true;
     }).down('space', function() {
         that.space_key = true;
@@ -150,7 +162,11 @@ GameScreen.prototype.initialize = function() {
 
     this.kibo.up('left', function() {
         that.up_key = false;
+    }).up('up', function() {
+        that.up_key = false;
     }).up('right', function() {
+        that.down_key = false;
+    }).up('down', function() {
         that.down_key = false;
     }).down('space', function() {
         that.space_key = false;
@@ -186,7 +202,11 @@ GameScreen.prototype.update = function(dt) {
 
     //hud update
     this.hud.meters = Math.round_decimal(this.plane.position.x * this.meter_pixel_ratio, 1);
-    this.hud.speed = Math.round_decimal(this.plane.velocity.len() * this.pixel_meter_ratio / 20, 1);
+    //console.log(this.plane.velocity.len());
+    if (this.plane.velocity.len() > 0)
+        this.hud.speed = Math.round_decimal(this.plane.velocity.len() * this.pixel_meter_ratio / 20, 1);
+    else
+        this.hud.speed = 0;
 
     //magnet mode
     //in magnet mode?
@@ -245,8 +265,12 @@ GameScreen.prototype.update = function(dt) {
     //gravity
     var v = this.gravity.clone().scale(dt);
 
+    //move plane
     this.plane.velocity.add(v);
 
+    //to show 0 in hud
+    if (this.obstacle_collision)
+        this.hud.speed = 0;
 
     if (this.plane.velocity.len() > 0.05)
     {
@@ -279,6 +303,10 @@ GameScreen.prototype.update = function(dt) {
     p.add(this.plane.velocity.clone().scale(dt));
     this.plane.set_position(p.x, p.y);
 
+    //don't go under ground
+    if (p.y > 800)
+        this.plane.set_position(p.x, 750);
+
     //this.plane.smoke();
 
 
@@ -303,15 +331,27 @@ GameScreen.prototype.update = function(dt) {
     }
     this.response.clear();
 
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground3.bounds, this.response))
+    {
+        this.handle_plane_to_ground_collision(this.response);
+    }
+    this.response.clear();
+
+    if (SAT.testPolygonPolygon(this.plane.bounds, this.front_layer.ground4.bounds, this.response))
+    {
+        this.handle_plane_to_ground_collision(this.response);
+    }
+    this.response.clear();
+
 
     //plane fan collision
     if (SAT.testPolygonPolygon(this.plane.bounds, this.fan.bounds, this.response))
     {
-        var new_angle = this.plane.angle - 0.6;
+        var new_angle = this.plane.angle - 1.1;
         this.plane.velocity.setAngle(Math.degrees_to_radians(new_angle));
-        this.plane.velocity.scale(1.015);
+        this.plane.velocity.scale(1.025);
 
-        this.add_acc += 1.015;
+        this.add_acc += 1.025;
     }
     this.response.clear();
 
@@ -345,13 +385,13 @@ GameScreen.prototype.update = function(dt) {
 
         this.fuel_point.set_position(pos_x, Math.random_int(10, 700));
 
-        var tween = new TweenTime(0.2, new Bezier(.07, .62, .49, .94), 1000, function() {
-
-            var tween2 = new TweenTime(1, new Bezier(1, .27, .93, .75), 600);
-            tween2.run();
-
-        });
-        tween.run();
+//        var tween = new TweenTime(0.2, new Bezier(.07, .62, .49, .94), 1000, function() {
+//
+//            var tween2 = new TweenTime(1, new Bezier(1, .27, .93, .75), 600);
+//            tween2.run();
+//
+//        });
+//        tween.run();
 
         //increse energy
         this.hud.increase_fuel();
@@ -378,8 +418,8 @@ GameScreen.prototype.update = function(dt) {
         var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
 
         this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
-        
-        if(this.rocket_start < 0 ){
+
+        if (this.rocket_start < 0) {
             ContentManager.sounds.rocket.loop(true).volume(0.4).play();
         }
         //rocket mode
@@ -388,7 +428,7 @@ GameScreen.prototype.update = function(dt) {
 
         var hero_tween = new TweenShake(this, 2, null, null, 3000);
         hero_tween.run();
-        
+
     }
 
     //plane obstacle collision
@@ -397,12 +437,15 @@ GameScreen.prototype.update = function(dt) {
         //console.log(this.response.overlapV.len());
         if (this.response.overlapV.len() > 30 && !this.obstacle_collision)
         {
+            this.is_game_over = true;
+
+            this.hud.speed = 0;
             this.plane.remove_from_parent();
             this.plane.velocity = new Vector(0);
 
             this.obstacle_collision = true;
-                ContentManager.sounds.crash.volume(1).play();
-                ContentManager.sounds.rocket.stop();
+            ContentManager.sounds.crash.volume(1).play();
+            ContentManager.sounds.rocket.stop();
 
             //create plane parts
             for (var i = 0; i < this.max_plane_parts_length; i++)
@@ -415,7 +458,7 @@ GameScreen.prototype.update = function(dt) {
                 this.front_layer.add_child(b);
                 this.plane_parts.push(b);
             }
-            
+
             this.magnet_start = -1;
             this.hud.magnet_progress = 0;
             this.rocket_start = -1;
@@ -431,7 +474,7 @@ GameScreen.prototype.update = function(dt) {
     {
         var v = new Vector();
         v.setLength(0.1);
-        v.rotate(3.14/2);
+        v.rotate(3.14 / 2);
         for (var i = 0; i < this.max_plane_parts_length; i++)
         {
             var b = this.plane_parts[i];
@@ -471,16 +514,23 @@ GameScreen.prototype.update = function(dt) {
     }
 
 //game over
-    if (this.plane.velocity.len() === 0 && this.plane.position.y > 745)
+    if (this.plane.velocity.len() === 0 && this.plane.position.y > 645 && !this.obstacle_collision && !this.show_game_over_alert)
     {
         //this.plane.
-        //console.log("game over");
+       //console.log("game over");
+        this.is_game_over = true;
+        this.show_game_over_alert = true;
         this.game_over();
     }
-    
-    if(this.obstacle_collision && this.plane.position.y > 600)
+
+    if (this.obstacle_collision && this.is_game_over && !this.show_game_over_alert)
     {
-        this.game_over();
+        //console.log("obstacle_collision");
+        var that = this;
+        this.show_game_over_alert = true;
+        setTimeout(function() {
+            that.game_over();
+        }, 1500);
     }
 
 //  this.hud.update();
@@ -490,6 +540,7 @@ GameScreen.prototype.track = function(object) {
 
     var target_pos = object.bounds.pos;
     var pos = this.front_layer.get_position();
+    //console.log(pos);   
     var center_camera = {x: Config.screen_width / 2 - 200, y: Config.screen_height / 2};
 
 
@@ -528,42 +579,45 @@ GameScreen.prototype.track = function(object) {
             else
                 y = this.plane.position.y + Math.random_int(-300, 300);
 
-            b.set_position(this.plane.position.x + Math.random_int(800, 1800), y);
+            b.set_position(this.plane.position.x + Math.random_int(800, 2800), y);
         }
     }
 
     //fan desappear when screen pass it and its relocated
     if (this.fan.position.x + 350 < this.plane.position.x)
     {
-        this.fan.set_position(this.plane.position.x + Math.random_int(4500, 5500), this.fan.position.y);
+        this.fan.set_position(this.plane.position.x + Math.random_int(800, 10000), this.fan.position.y);
     }
 
     //fuel desappear when screen pass it and its relocated
     if (this.fuel_point.position.x + 350 < this.plane.position.x)
     {
-        var pos_x = 2 * this.fuel_point.position.x + this.fuel_point.position.x * 0.1;
-        this.fuel_point.set_position(pos_x, Math.random_int(10, 700));
+        var pos_x = 2 * this.fuel_point.position.x + this.fuel_point.position.x * this.fuel_multi;
+        this.fuel_multi+=0.1;
+        this.fuel_point.set_position(Math.random_int(pos_x, pos_x + 700), Math.random_int(10, 700));
     }
 
     //magnet desappear when screen pass it and its relocated
     if (this.magnet_point.position.x + 350 < this.plane.position.x)
     {
-        var pos_x = 2 * this.magnet_point.position.x + this.magnet_point.position.x * 0.1;
-        this.magnet_point.set_position(pos_x, Math.random_int(10, 700));
+        var pos_x = 2 * this.magnet_point.position.x + this.magnet_point.position.x * this.magnet_multi;
+        this.magnet_multi+=0.1;
+        this.magnet_point.set_position(Math.random_int(pos_x, pos_x + 700), Math.random_int(10, 700));
     }
 
     //rocket desappear when screen pass it and its relocated
     if (this.rocket_point.position.x + 350 < this.plane.position.x)
     {
-        var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * 0.1;
-        this.rocket_point.set_position(pos_x, Math.random_int(10, 700));
+        var pos_x = 2 * this.rocket_point.position.x + this.rocket_point.position.x * this.rocket_multi;
+        this.rocket_multi+=0.1;
+        this.rocket_point.set_position(Math.random_int(pos_x, pos_x + 700), Math.random_int(10, 700));
     }
-    
+
     //obstacle desappear when screen pass it and its relocated
     if (this.obstacle_point.position.x + 350 < this.plane.position.x)
     {
-        var pos_x = 2 * this.obstacle_point.position.x + this.obstacle_point.position.x * 0.1;
-        this.obstacle_point.set_position(pos_x, Math.random_int(10, 700));
+        var pos_x = 2 * this.obstacle_point.position.x + this.obstacle_point.position.x;
+        this.obstacle_point.set_position(Math.random_int(pos_x, pos_x + 700), Math.random_int(10, 700));
     }
 };
 
@@ -635,7 +689,7 @@ GameScreen.prototype.on_draw_finished = function(context) {
 };
 
 GameScreen.prototype.on_mouse_up = function(event) {
-    console.log("Touch: UP");
+    //console.log("Touch: UP");
     this.up_key = false;
     this.down_key = false;
 
@@ -655,12 +709,88 @@ GameScreen.prototype.on_mouse_move = function(event) {
 
 GameScreen.prototype.game_over = function() {
 
-    if (!this.is_game_over) {
-        this.is_game_over = true;
-        this.over_alert.set_position(10, 10);
-        this.over_alert.z_index = 100;
-        this.add_child(this.over_alert);
+    //if (!this.show_game_over_alert && this.is_game_over) {
+    //   this.is_game_over = true;
+    this.over_alert.set_position(10, 10);
+    this.over_alert.z_index = 100;
+    this.over_alert.meters = this.hud.meters;
+    this.add_child(this.over_alert);
+    //}
+
+};
+
+GameScreen.prototype.on_restart_game = function() {
+
+    //restartiraj sfe
+    //console.log("restart");
+    this.show_game_over_alert = false;
+    this.is_game_over = false;
+
+    this.plane.set_position(390, 550);
+
+    this.front_layer.fg1.set_position(0, 320);
+    this.front_layer.fg2.set_position(800, 320);
+    this.front_layer.fg3.set_position(1600, 320);
+    this.front_layer.fg4.set_position(2400, 320);
+    this.front_layer.ground1.set_position(0, 750);
+    this.front_layer.ground2.set_position(800, 750);
+    this.front_layer.ground3.set_position(1600, 750);
+    this.front_layer.ground4.set_position(2400, 750);
+    
+    this.front_mountin.fm1.set_position(0,120);
+    this.front_mountin.fm2.set_position(800,120);
+
+    this.front_layer.set_position(0, 0);
+    this.front_mountin.set_position(0, 0);
+    this.back_mountin.set_position(0, 0);
+    this.sky.set_position(0, 0);
+    //this.ground.set_position(0, 750);
+
+    this.plane.velocity.setLength(0.4);//(0.4);
+    this.plane.velocity.setAngle(Math.degrees_to_radians(-20));
+    this.plane.play('fly');
+    this.plane.remove_from_parent();
+    this.front_layer.add_child(this.plane);
+    this.min_velocity = 0.2;
+
+    if (this.obstacle_collision)
+    {
+        for (var i = 0; i < this.max_plane_parts_length; i++)
+        {
+            this.plane_parts[i].remove_from_parent();
+        }
     }
+
+    this.plane_parts = [];
+
+    this.obstacle_collision = false;
+    this.show_game_over_alert = false;
+    
+    //hud restart
+    this.hud.fuel = this.hud.max_fuel;
+    this.hud.magnet_bg.is_visible = false;
+    this.hud.magnet_bar.is_visible = false;
+    this.hud.magnet_progress = 0;
+    this.hud.rocket_bg.is_visible = false;
+    this.hud.rocket_bar.is_visible = false;
+    this.hud.rocket_progress = 0;
+    this.hud.speed_progress = 0;
+    this.hud.next_speed = 10;
+    
+    //particles restart
+    for (var i in this.bonuses)
+    {
+        var b = this.bonuses[i];
+        b.set_position(this.plane.position.x + Math.random_int(600, 3600), Math.random_int(20, 690));
+    }
+    this.fuel_point.set_position(Math.random_int(6000, 8000), Math.random_int(50, 700));
+    this.magnet_point.set_position(Math.random_int(5000, 7000), Math.random_int(50, 700));
+    this.rocket_point.set_position(Math.random_int(4000, 6000), Math.random_int(50, 700));
+    this.obstacle_point.set_position(Math.random_int(3000, 5000), Math.random_int(100, 700));
+    this.max_bonuses_length = 10;
+        
+        
+    this.over_alert.remove_from_parent();
 
 };
 

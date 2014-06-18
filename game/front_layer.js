@@ -6,28 +6,48 @@
         this.sprites = [];
         
         
-        var fg1 = new Sprite('fg1');
-        fg1.set_position(0,320);
-        fg1.z_index = -10;
-        var fg2 = new Sprite('fg2');
-        fg2.set_position(800,320);
-        fg2.z_index = -10;
+        this.fg1 = new Sprite('fg1');
+        this.fg1.set_position(0,320);
+        this.fg1.z_index = -10;
+        this.fg2 = new Sprite('fg2');
+        this.fg2.set_position(800,320);
+        this.fg2.z_index = -10;
+        this.fg3 = new Sprite('fg1');
+        this.fg3.set_position(1600,320);
+        this.fg3.z_index = -10;
+        this.fg4 = new Sprite('fg2');
+        this.fg4.set_position(2400,320);
+        this.fg4.z_index = -10;
                 
         this.ground1 = new Sprite("ground");
         this.ground1.set_position(0,750);
         
         this.ground2 = new Sprite("ground");
         this.ground2.set_position(800,750);
+        
+        this.ground3 = new Sprite("ground");
+        this.ground3.set_position(1600,750);
+        
+        this.ground4 = new Sprite("ground");
+        this.ground4.set_position(2400,750);
                 
         this.add_child(this.ground1);
         this.add_child(this.ground2);
-        this.add_child(fg1);
-        this.add_child(fg2);
+        this.add_child(this.ground3);
+        this.add_child(this.ground4);
+        this.add_child(this.fg1);
+        this.add_child(this.fg2);
+        this.add_child(this.fg3);
+        this.add_child(this.fg4);
         
         this.sprites.push(this.ground1);
         this.sprites.push(this.ground2);
-        this.sprites.push(fg1);
-        this.sprites.push(fg2);
+        this.sprites.push(this.ground3);
+        this.sprites.push(this.ground4);
+        this.sprites.push(this.fg1);
+        this.sprites.push(this.fg2);
+        this.sprites.push(this.fg3);
+        this.sprites.push(this.fg4);
     }    
     
     FrontLayer.prototype = new Drawable();
@@ -52,11 +72,11 @@
                 
                 var sprite = this.sprites[i];
                 
-                if(sprite.bounds.pos.x < -800){
+                if(sprite.bounds.pos.x < -1600){
                     
                   var p =  sprite.get_position();
                   
-                  sprite.set_position(p.x+1600,p.y);
+                  sprite.set_position(p.x+3200,p.y);
                     
                 }
                 

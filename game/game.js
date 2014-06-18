@@ -68,6 +68,8 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('ninja_star', 'assets/images/ninja_star.png');
         ContentManager.add_image('plane_part', 'assets/images/plane_part.png');
         
+        ContentManager.add_image('up', 'assets/images/up.png');
+        ContentManager.add_image('down', 'assets/images/down.png');
 
         ContentManager.add_image('message_box', 'assets/images/message_box.png');
         ContentManager.add_image('button', 'assets/images/button.png');

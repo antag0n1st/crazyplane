@@ -13,16 +13,16 @@
         
         this.sprites = [];
         
-        var fm1 = new Sprite('bg1');
-        fm1.set_position(0,120);
-        var fm2 = new Sprite('bg2');
-        fm2.set_position(800,120);
+        this.fm1 = new Sprite('bg1');
+        this.fm1.set_position(0,120);
+        this.fm2 = new Sprite('bg2');
+        this.fm2.set_position(800,120);
         
-        this.add_child(fm1);
-        this.add_child(fm2);
+        this.add_child(this.fm1);
+        this.add_child(this.fm2);
         
-        this.sprites.push(fm1);
-        this.sprites.push(fm2);
+        this.sprites.push(this.fm1);
+        this.sprites.push(this.fm2);
         
     };
     
