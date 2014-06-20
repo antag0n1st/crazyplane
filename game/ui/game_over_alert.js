@@ -10,10 +10,11 @@
         this.drawable_initialize();
         
               
-        this.image = ContentManager.images.message_box.image;
+        this.image = ContentManager.images.alert.image;
         this.set_size(this.image.width,this.image.height);
         
         this.meters=0;
+        this.best_meters=0;
         this.level=0;
         
         this.priority = 19;
@@ -30,7 +31,7 @@
         
         this.level_label = new Label();
         this.level_label.set({
-            text: "Press Reload to try again level " + this.level ,
+            text: "" ,
             text_align : "left",
             text_valign: 'middle',
             text_color : "black",
@@ -40,7 +41,7 @@
         
         this.meters_label = new Label();
         this.meters_label.set({
-            text: "Points: "+ this.meters ,
+            text: "" ,
             text_align : "left",
             text_valign: 'middle',
             text_color : "black",
@@ -50,10 +51,10 @@
         
                 
         this.cancel_button = new Button({image:ContentManager.images.button});
-        this.cancel_button.text = "Reload";
-        this.cancel_button.text_color = "#ffffff";
+        this.cancel_button.text = "Click To Retry";
+        this.cancel_button.text_color = "#31474d";
         this.cancel_button.font_family = "Sofadi One";
-        this.cancel_button.font_size = 18;
+        this.cancel_button.font_size = 20;
         this.cancel_button.on_mouse_up = GameOverAlert.prototype.on_restart.bind(this);
         this.cancel_button.priority = 20;
         
@@ -74,11 +75,11 @@
     GameOverAlert.prototype.layout = function(){
         
         var padding = 10;
-        this.title.set_position(this.width/2 - this.title.width/2,85);
-
-        this.level_label.set_position(this.width/2 - this.level_label.width/2,this.title.get_position().y + 30);
-        this.meters_label.set_position(this.width/2 - this.meters_label.width/2,this.level_label.get_position().y + 30);
-        this.cancel_button.set_position(this.width/2 - this.cancel_button.width/2,this.meters_label.get_position().y + 25);
+        this.title.set_position(this.width/2 - this.title.width/2,40);
+        var x = this.title.get_position().x;
+        this.level_label.set_position(x,this.title.get_position().y + 30);
+        this.meters_label.set_position(x,this.level_label.get_position().y + 30);
+        this.cancel_button.set_position(x,this.meters_label.get_position().y + 25);
     };
     
     
@@ -98,9 +99,9 @@
         game.input.add(this);
         game.input.add(this.cancel_button);  
         
-         this.level_label.set({text: "Press Reload to try again"});
+         this.level_label.set({text: "Your score: "+this.meters+" meters"});
          
-         this.meters_label.set({text: "Meters: "+ this.meters });
+         this.meters_label.set({text: "Your best: "+ this.best_meters+" meters" });
         
     };
     

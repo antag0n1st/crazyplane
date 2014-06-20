@@ -69,10 +69,13 @@ Game.prototype.initialize = function() {
         ContentManager.add_image('rocket_powerup', 'assets/images/rocket_powerup.png');
         ContentManager.add_image('ninja_star', 'assets/images/ninja_star.png');
         ContentManager.add_image('plane_part', 'assets/images/plane_part.png');
+        ContentManager.add_image('keyboard', 'assets/images/keyboard.png');
+        ContentManager.add_image('left_keyboard', 'assets/images/left_keyboard.png');
+        ContentManager.add_image('right_keyboard', 'assets/images/right_keyboard.png');
+        ContentManager.add_image('transparent_black', 'assets/images/transparent_black.png');
+        ContentManager.add_image('arrow', 'assets/images/arrow.png');
+        ContentManager.add_image('alert', 'assets/images/alert.png');
         
-        ContentManager.add_image('up', 'assets/images/up.png');
-        ContentManager.add_image('down', 'assets/images/down.png');
-
         ContentManager.add_image('message_box', 'assets/images/message_box.png');
         ContentManager.add_image('button', 'assets/images/button.png');
 

@@ -9,6 +9,10 @@ GameScreen.prototype.screen_initialize = GameScreen.prototype.initialize;
 
 GameScreen.prototype.initialize = function() {
     this.screen_initialize();
+    
+    var tutorial = new Tutorial();
+        tutorial.z_index = 100;
+        this.add_child(tutorial);
 
     this.front_layer = new FrontLayer();
 
@@ -31,24 +35,24 @@ GameScreen.prototype.initialize = function() {
     this.add_child(this.sky);
     //this.front_layer.add_child(this.ground);
 
-    this.up_image = new Sprite("up");
-    this.down_image = new Sprite("down");
-    this.up_image.z_index = 10;
-    this.down_image.z_index = 10;
-    this.down_image.set_position(400, 0);
-
-    var up_alpha = new TweenAlpha(this.up_image, 0, null, 2500, function() {
-        this.object.remove_from_parent()
-    });
-    var down_alpha = new TweenAlpha(this.down_image, 0, null, 2500, function() {
-        this.object.remove_from_parent()
-    });
-
-    up_alpha.run();
-    down_alpha.run();
-
-    this.add_child(this.up_image);
-    this.add_child(this.down_image);
+//    this.up_image = new Sprite("up");
+//    this.down_image = new Sprite("down");
+//    this.up_image.z_index = 10;
+//    this.down_image.z_index = 10;
+//    this.down_image.set_position(400, 0);
+//
+//    var up_alpha = new TweenAlpha(this.up_image, 0, null, 2500, function() {
+//        this.object.remove_from_parent()
+//    });
+//    var down_alpha = new TweenAlpha(this.down_image, 0, null, 2500, function() {
+//        this.object.remove_from_parent()
+//    });
+//
+//    up_alpha.run();
+//    down_alpha.run();
+//
+//    this.add_child(this.up_image);
+//    this.add_child(this.down_image);
 
 
     this.plane = new Plane();
@@ -136,7 +140,7 @@ GameScreen.prototype.initialize = function() {
 
 
     this.hud = new Hud();
-    this.hud.z_index = 25;
+    this.hud.z_index = 101;
     this.hud.set_position(0, 0);
 
     this.add_child(this.hud);
@@ -713,7 +717,7 @@ GameScreen.prototype.game_over = function() {
 
     //if (!this.show_game_over_alert && this.is_game_over) {
     //   this.is_game_over = true;
-    this.over_alert.set_position(10, 10);
+    this.over_alert.set_position(0, 100);
     this.over_alert.z_index = 100;
     this.over_alert.meters = this.hud.meters;
     this.add_child(this.over_alert);
