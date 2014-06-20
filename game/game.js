@@ -94,6 +94,8 @@ Game.prototype.initialize = function() {
         ContentManager.add_sound('rocket','assets/sounds/rocket');
         ContentManager.add_sound('crash','assets/sounds/crash');
         
+        ContentManager.add_audio('paperplane','assets/sounds/paperplane');
+        
         ////////////////////////////////////////////////////////////////////////
 
         game.navigator.add(new LoadingScreen());

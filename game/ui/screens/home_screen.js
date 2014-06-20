@@ -50,6 +50,8 @@
         
         this.stop_animations = false;
         
+        ContentManager.sounds.paperplane.loop(true).play();
+        
         
     };
     
