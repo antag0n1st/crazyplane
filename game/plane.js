@@ -37,15 +37,31 @@ this.emiter_point = new Vector(-115, 0);
     this.rotation = 1 / 1000;
 
 
- 
-
-
-    this.bounds = new Polygon(new Vector(), [
+ this.plane_bounds = new Polygon(new Vector(), [
         new Vector(-54, 14),
         new Vector(54, -6),
         new Vector(-54, -8)
     ]);
 
+
+    this.bounds = this.plane_bounds;
+
+};
+
+Plane.prototype.get_rocket_bounds = function(){
+    var rocket_bounds = new Polygon(new Vector(), [
+        new Vector(0, 0),
+        new Vector(29, -4),
+        new Vector(46, 4),
+        new Vector(86, 3),
+        new Vector(126, 18),
+        new Vector(92, 36),
+        new Vector(47, 38),
+        new Vector(34, 45),
+        new Vector(4, 44)
+    ]);
+    rocket_bounds.translate(-62, -22);
+    return rocket_bounds;
 };
 
 Plane.prototype.on_mouse_up = function(event) {

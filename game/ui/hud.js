@@ -104,7 +104,6 @@
             text: "Speed: " + this.speed +" m/s"
         });
 
-        //console.log(this.magnet_progress);
         var fb = this.max_width * this.fuel / this.max_fuel;
 
         if (fb > 0)
@@ -133,7 +132,6 @@
 
         if (mb > 0)
         {
-            console.log(mb);
             this.magnet_bar.width = mb;
             this.magnet_bar.is_visible = true;
             this.magnet_bg.is_visible = true;
