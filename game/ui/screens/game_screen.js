@@ -221,6 +221,7 @@ GameScreen.prototype.update = function(dt) {
             this.plane.emitter.stop();
             this.plane.bounds = this.plane.plane_bounds;
             this.plane.bounds.rotate( this.plane.velocity.getAngle());
+            this.rocket_tween.stop();
             if (this.velocity_updated)
             {
                 this.plane.velocity.setLength(this.old_velocity);
@@ -401,8 +402,8 @@ GameScreen.prototype.update = function(dt) {
         this.hud.rocket_progress = 1;
         this.rocket_start = this.plane.position.x;
 
-        var hero_tween = new TweenShake(this, 2, null, null, 2000);
-        hero_tween.run();
+        this.rocket_tween = new TweenShake(this, 2, null, null, 10000);
+        this.rocket_tween.run();
 
     }
 
