@@ -13,17 +13,17 @@
         
         this.sprites = [];
         
-        var bm1 = new Sprite('bm1');
-        bm1.set_position(0,100);
+        this.bm1 = new Sprite('bm1');
+        this.bm1.set_position(0,100);
         
-        var bm2 = new Sprite('bm2');
-        bm2.set_position(800,100);
+        this.bm2 = new Sprite('bm2');
+        this.bm2.set_position(800,100);
         
-        this.add_child(bm1);
-        this.add_child(bm2);
+        this.add_child(this.bm1);
+        this.add_child(this.bm2);
         
-        this.sprites.push(bm1);
-        this.sprites.push(bm2);
+        this.sprites.push(this.bm1);
+        this.sprites.push(this.bm2);
         
     };
     

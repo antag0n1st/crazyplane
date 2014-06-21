@@ -57,8 +57,6 @@ GameScreen.prototype.initialize = function() {
 
     this.plane = new Plane();
 
-
-
     this.plane.set_position(390, 550);
     this.plane.velocity.setLength(0.4);//(0.4);
     this.plane.velocity.rotate(Math.degrees_to_radians(-20));
@@ -76,7 +74,7 @@ GameScreen.prototype.initialize = function() {
         new Vector(50, 40)
     ]);
 
-    this.fan.set_position(1400, 700);
+    this.fan.set_position(1400, 715);
     this.fan.z_index = 2;
     this.front_layer.add_child(this.fan);
 
@@ -107,7 +105,7 @@ GameScreen.prototype.initialize = function() {
     this.magnet_plane = new Circle(new Vector(), 300);
 
     this.rocket_point = new Rocket();
-    this.rocket_point.set_position(Math.random_int(4000, 6000), Math.random_int(50, 700));
+    this.rocket_point.set_position(1000, 380);//(Math.random_int(4000, 6000), Math.random_int(50, 700));
     this.front_layer.add_child(this.rocket_point);
     this.rocket_multi = 0.1;
     this.rocket_start = -1;
@@ -245,6 +243,8 @@ GameScreen.prototype.update = function(dt) {
             this.rocket_start = -1;
             this.hud.rocket_progress = 0;
             ContentManager.sounds.rocket.stop();
+            this.plane.play('fly');
+            this.plane.emitter.stop();
             if (this.velocity_updated)
             {
                 this.plane.velocity.setLength(this.old_velocity);
@@ -427,6 +427,13 @@ GameScreen.prototype.update = function(dt) {
 
         if (this.rocket_start < 0) {
             ContentManager.sounds.rocket.loop(true).volume(0.4).play();
+            this.plane.play('rocket');
+            this.plane.emitter.run();
+//            this.plane.remove_from_parent();
+//            var pos = this.plane.get_position();
+//            this.plane = new RocketPlane();
+//            this.plane.set_position(pos.x,pos.y);
+//            this.add_child(this.plane);
         }
         //rocket mode
         this.hud.rocket_progress = 1;
@@ -717,9 +724,14 @@ GameScreen.prototype.game_over = function() {
 
     //if (!this.show_game_over_alert && this.is_game_over) {
     //   this.is_game_over = true;
+    this.plane.stop();
+    ContentManager.sounds.rocket.stop();
+    this.plane.emitter.stop();
     this.over_alert.set_position(0, 100);
     this.over_alert.z_index = 100;
     this.over_alert.meters = this.hud.meters;
+    if (this.over_alert.meters > this.over_alert.best_meters)
+        this.over_alert.best_meters = this.over_alert.meters;
     this.add_child(this.over_alert);
     //}
 
@@ -745,6 +757,9 @@ GameScreen.prototype.on_restart_game = function() {
     
     this.front_mountin.fm1.set_position(0,120);
     this.front_mountin.fm2.set_position(800,120);
+
+    this.back_mountin.bm1.set_position(0, 100);
+    this.back_mountin.bm2.set_position(800, 100);
 
     this.front_layer.set_position(0, 0);
     this.front_mountin.set_position(0, 0);
@@ -772,6 +787,11 @@ GameScreen.prototype.on_restart_game = function() {
     this.obstacle_collision = false;
     this.show_game_over_alert = false;
     
+    this.rocket_start = -1;
+    this.magnet_start = -1;
+    this.old_velocity = this.plane.velocity.len();
+    this.velocity_updated = false;
+    
     //hud restart
     this.hud.fuel = this.hud.max_fuel;
     this.hud.magnet_bg.is_visible = false;
@@ -793,6 +813,7 @@ GameScreen.prototype.on_restart_game = function() {
     this.magnet_point.set_position(Math.random_int(5000, 7000), Math.random_int(50, 700));
     this.rocket_point.set_position(Math.random_int(4000, 6000), Math.random_int(50, 700));
     this.obstacle_point.set_position(Math.random_int(3000, 5000), Math.random_int(100, 700));
+    this.fan.set_position(1400, 715);
     this.max_bonuses_length = 10;
         
         

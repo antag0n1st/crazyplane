@@ -13,6 +13,7 @@
 
         this.speed = 0;
         this.meters = 0;
+        this.best_meters = 0;
 
         this.speed_label = new Label();
         this.speed_label.set({

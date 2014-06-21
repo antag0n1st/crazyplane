@@ -17,19 +17,27 @@ Plane.prototype.initialize = function() {
                 fly_up: {start: 4, end: 7, loop: false, duration: 400}
             }
             , reg: {x: 0.6, y: 0.5, width: 0.8, height: 0.5}
+        },
+    {
+            image: ContentManager.images.rocket_animated,
+            frames: {x: 1, y: 2},
+            animations: {
+                rocket: {start: 0, end: 1, loop: true, duration: 100}
+            }
+            , reg: {x: 0.5, y: 0.5, width: 1.0, height: 1.0}
         }]);
 
     this.animation_initialize(sprite_sheet);
 
+this.emiter_point = new Vector(-115, 0);
+    this.emitter = new Emitter(this.position, null, Smoke, 15 / 1000);
 
     this.velocity = new Vector();
 
     this.rotation = 1 / 1000;
 
 
-    this.smoke_frequency = 20 / 1000; // per second
-    this.smoke_count = 0;
-    this.smoke_time = 0;
+ 
 
 
     this.bounds = new Polygon(new Vector(), [
@@ -54,6 +62,7 @@ Plane.prototype.steer_down = function(dt) {
 
 Plane.prototype.on_added_to_parent = function(parent) {
     Drawable.prototype.on_added_to_parent.call(this, parent);
+    this.emitter.layer = parent;
 
 };
 
@@ -62,33 +71,6 @@ Plane.prototype.on_remove_from_parent = function(parent) {
 
 };
 
-Plane.prototype.draw = function(context) {
-    Animation.prototype.draw.call(this, context);
-
-
-
-//        if(Config.debug){
-//            var pos = this.bounds.pos;
-//            var anchor = Vector.addition(pos,this.emiter_point);
-//            context.fillStyle="yellow";
-//            context.beginPath();
-//            context.arc(anchor.x,anchor.y,2,0,2*Math.PI);
-//            context.fill();
-//            context.closePath();
-//            context.fillStyle="black";
-//
-//            this.debug_bounds(context);
-//        }
-
-
-};
-
-//    Plane.prototype.rotate_to = function(angle){
-//        
-//        var a = angle - this.angle;        
-//        Drawable.prototype.rotate_to.call(this,angle);
-//        this.emiter_point.rotate(Math.degrees_to_radians(a));
-//    };
 
 Plane.prototype.clear = function(context) {
 
@@ -96,7 +78,7 @@ Plane.prototype.clear = function(context) {
 
 Plane.prototype.update = function(dt) {
     Animation.prototype.update.call(this, dt);
-
+    this.emitter.emission_point = this.get_position().add(this.emiter_point);
 };
 
 //    window.Plane = Plane;
